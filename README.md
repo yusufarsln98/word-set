@@ -1,3 +1,5 @@
+# -------------------- STAY TUNED --------------------
+
 # WordSet - Language Learning Application
 
 ![WordSet](https://raw.githubusercontent.com/yusufarsln98/word-set/master/_assets/Logo.png)
@@ -57,4 +59,4 @@ Act as an advanced dictionary. Fill in the '?' areas in the object. If not such 
 }
 ```
 
-# STAY TUNED
+
