@@ -43,4 +43,18 @@ Within the application, there is a calendar that displays the days when the user
 
 ![enter image description here](https://raw.githubusercontent.com/yusufarsln98/word-set/master/_assets/Word%20Set%20-%20Class%20Diagram.png)
 
+
+## GPT Prompt To Receive Flashcard Object
+```
+Note: When answering, do not make any explanation. Just write the object that is asked for.
+
+Act as an advanced dictionary. Fill in the '?' areas in the object. If not such a write 'null' without quotes.
+{
+    "word": "abate",
+    "definitionInEnglish": ?,
+    "exampleInEnglish": ?,
+    "turkishTranslation": ?
+}
+```
+
 # STAY TUNED
