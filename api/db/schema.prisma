@@ -8,3 +8,47 @@ generator client {
   binaryTargets = "native"
 }
 
+enum Language {
+  EN
+  TR
+  ES
+  DE
+}
+
+enum Role {
+  ADMIN
+  PREMIUM_USER
+  USER
+}
+
+// Model definitions
+// -------- Dictionary --------
+model Dictionary {
+  id            Int         @id @default(autoincrement())
+  words         Word[]
+  language      Language
+}
+
+model Word {
+  id            Int         @id @default(autoincrement())
+  word          String
+  dictionary    Dictionary  @relation(fields: [dictionaryId], references: [id])
+  dictionaryId  Int
+  meanings      Meaning[]
+  phonetic      String?
+}
+
+model Meaning {
+  id              Int       @id @default(autoincrement())
+  partOfSpeech    String
+  definition      String
+  example         String?
+  word            Word      @relation(fields: [wordId], references: [id])
+  wordId          Int
+}
+
+// -------- User --------
+model Avatar {
+  id   Int    @id @default(autoincrement())
+  data String
+}
