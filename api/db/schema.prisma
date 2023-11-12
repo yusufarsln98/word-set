@@ -37,7 +37,7 @@ enum Theme {
 model Avatar {
   id      Int     @id @default(autoincrement())
   data    String  // Base64 Encoded Image
-  userConfig UserConfig[]
+  userConfig UserConfig[] // Hide this field from client
 }
 
 model User {
@@ -90,29 +90,43 @@ model Folder {
 }
 
 model Set {
+  // Either folder or user must has set
   id                    Int         @id @default(autoincrement())
 
   title                 String
   description           String
   creatorId             Int         // Sets can be created or copied by other users - this is for credit
 
-  user                  User        @relation(fields: [userId], references: [id])
-  userId                Int
+  termsLanguage         Language
+  translationsLanguage  Language
+
+  user                  User?        @relation(fields: [userId], references: [id])
+  userId                Int?
 
   folder                Folder?     @relation(fields: [folderId], references: [id])
   folderId              Int?
 
-  termsLanguage         Language
-  translationsLanguage  Language
-
   flashCards            FlashCard[]
+}
+
+model FlashCard {
+  id                  Int         @id @default(autoincrement())
+
+  term                String
+  translation         String
+  definition          String
+  example             String
+  boost               Float       @default(1)
+
+  set                 Set         @relation(fields: [setId], references: [id])
+  setId               Int
 }
 
 //  -------- Word --------
 //  User can search a word by specifying the term and translation language
 model Word {
   id                    Int         @id @default(autoincrement())
-  term                  String
+  term                  String      // all lowercased
   // Term search is an unique field to find the word in constant time
   // It is combination of term and termsLanguage and translationsLanguage
   // For example, if term is "hello", termsLanguage is EN, and translationsLanguage is TR
@@ -122,19 +136,16 @@ model Word {
   termsLanguage         Language
   translationsLanguage  Language
 
-  flashCards            FlashCard[]
+  cards                 Card[]
 }
 
-model FlashCard {
+model Card {
   id                  Int         @id @default(autoincrement())
-  term                String
+
   translation         String
   definition          String
   example             String
 
   word                Word        @relation(fields: [wordId], references: [id])
   wordId              Int
-
-  set                 Set         @relation(fields: [setId], references: [id])
-  setId               Int
 }
