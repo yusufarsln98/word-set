@@ -19,10 +19,15 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
+      <Route path="/login" page={LoginPage} name="login" />
+      <Route path="/signup" page={SignupPage} name="signup" />
+      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       <Private unauthenticated="home">
         <Route path="/latest" page={LatestPage} name="latest" />
       </Private>
-      <Private unauthenticated="home" role="admin">
+      {/* set this as role based */}
+      <Private unauthenticated="home">
         <Route path="/admin" page={AdminPage} name="admin" />
       </Private>
       <Route path="/" page={HomePage} name="home" />
