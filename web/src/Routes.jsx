@@ -26,7 +26,7 @@ const Routes = () => {
         <Route path="/admin" page={AdminPage} name="admin" />
       </Private>
       <Route path="/" page={HomePage} name="home" />
-      <Route notfound page={HomePage} />
+      <Route notfound page={NotFoundPage} />
     </Router>
   )
 }
