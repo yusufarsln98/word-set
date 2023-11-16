@@ -50,7 +50,7 @@ model User {
   salt                String
   resetToken          String?
   resetTokenExpiresAt DateTime?
-  role                Role        @default(USER)
+  roles               Role[]      @default([USER])
   createdAt           DateTime    @default(now())
   daysStudied         DateTime[]
 
