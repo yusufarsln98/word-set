@@ -31,7 +31,7 @@ export const getCurrentUser = async (session) => {
       username: true,
       email: true,
       name: true,
-      role: true,
+      roles: true,
       createdAt: true,
       userConfig: true,
     },

@@ -27,7 +27,7 @@ const Routes = () => {
         <Route path="/latest" page={LatestPage} name="latest" />
       </Private>
       {/* set this as role based */}
-      <Private unauthenticated="home">
+      <Private unauthenticated="home" roles="ADMIN">
         <Route path="/admin" page={AdminPage} name="admin" />
       </Private>
       <Route path="/" page={HomePage} name="home" />
