@@ -10,8 +10,6 @@ const LatestPage = () => {
     logOut,
   } = useAuth()
 
-  console.log('currentUser', currentUser)
-
   return (
     <>
       <MetaTags title="Latest" description="Latest page" />

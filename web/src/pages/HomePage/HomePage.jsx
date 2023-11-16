@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 
+import { Button } from 'antd'
+
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
@@ -7,8 +9,6 @@ import { useAuth } from 'src/auth'
 
 const HomePage = () => {
   const { isAuthenticated } = useAuth()
-  console.log('isAuthenticated', isAuthenticated)
-  // if user authenticated, redirect to /latest page
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,7 +21,7 @@ const HomePage = () => {
       {!isAuthenticated && (
         <>
           <MetaTags title="Home" description="Home page" />
-
+          <Button onClick={() => navigate(routes.login())}>Login</Button>
           <h1>HomePage</h1>
           <p>
             Find me in <code>./web/src/pages/HomePage/HomePage.jsx</code>
