@@ -21680,6 +21680,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@ant-design/colors": ^7.0.0
     "@redwoodjs/auth-dbauth-setup": 6.4.0
     "@redwoodjs/cli-storybook": 6.4.0
     "@redwoodjs/core": 6.4.0
