@@ -1,4 +1,15 @@
-import { Button, Dropdown, Flex, Image, Layout, Menu, Space, theme } from 'antd'
+import {
+  Button,
+  Dropdown,
+  Flex,
+  Image,
+  Input,
+  Layout,
+  Menu,
+  Space,
+  theme,
+} from 'antd'
+import Search from 'antd/es/input/Search'
 
 import { Link, routes } from '@redwoodjs/router'
 
@@ -108,19 +119,17 @@ const ApplicationLayout = ({ children }) => {
               </Link>
               <Menu
                 mode="horizontal"
-                defaultSelectedKeys={['2']}
+                defaultSelectedKeys={['1']}
                 items={headerMenuItems}
                 style={{
                   background: colorBgContainer,
                   borderBottom: `1px solid ${colorBorder}`,
                 }}
               />
-              {/* <Input
-                type="search"
+              {/* <Search
+                // type="search"
                 placeholder="Search"
-                style={{
-                  background: colorBgLayout,
-                }}
+                onSearch={(value) => alert(value)}
               /> */}
             </Flex>
             <Space>
@@ -141,7 +150,6 @@ const ApplicationLayout = ({ children }) => {
                 placement="bottomLeft"
               >
                 <Button
-                  onClick={console.log('Notification Clicked!')}
                   style={{
                     background: colorBgLayout,
                   }}
@@ -158,7 +166,6 @@ const ApplicationLayout = ({ children }) => {
                 placement="bottomLeft"
               >
                 <Button
-                  onClick={console.log('User Icon Clicked!')}
                   style={{
                     background: colorBgLayout,
                   }}
@@ -172,18 +179,17 @@ const ApplicationLayout = ({ children }) => {
 
         <Content
           style={{
-            padding: '0 50px',
-            background: colorBgContainer,
+            minHeight: 'calc(100vh - 64px - 69px)',
+            minWidth: '100%',
           }}
         >
-          <div className="site-layout-content">{children}</div>
+          {children}
         </Content>
-
         <Footer
           style={{
             textAlign: 'center',
-            background: colorBgLayout,
             borderTop: `1px solid ${colorBorder}`,
+            background: colorBgContainer,
           }}
         >
           <Flex justify="center" align="center">
