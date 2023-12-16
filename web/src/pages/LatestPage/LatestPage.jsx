@@ -7,55 +7,74 @@ import { Button, Card, Flex, Form, Input, Space } from 'antd'
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
-const getPrompt = (searchText) => {
-  return `Act as an advanced dictionary. Do not make any explanation. Just write the object that is asked for. Fill in the '?' areas in the object. If the given word is not a valid word, write 'null' without quotes. {"word": "${searchText}", "definitionInEnglish": ?, "exampleInEnglish": ?, "turkishTranslation": ?}`
+const getSystemMessage = (searchText, languages) => {
+  return `You are an advanced ${languages[0]}-${
+    languages[1]
+  } dictionary that takes a searchText (no case sensitive) and returns a JSON object.
+  If '${searchText}' is not an ${
+    languages[0]
+  } word, return the object below: (IMPORTANT)
+  {
+    "word": "${searchText}"
+    "error": "No definition found."
+  }
+  If '${searchText}' is an ${
+    languages[0]
+  } word, fill in the '?' areas in the object and return it: (IMPORTANT)
+  {
+    "word": "${searchText}",
+    "definitionIn${languages[0]}": ?,
+    "cefrLevel": ?,
+    "partOfSpeech": ?,
+    "exampleIn${languages[0]}": ?,
+    "${languages[1].toLowerCase()}Translation": ?
+  }`
 }
 
-// const requestData = {
-//   model: 'gpt-3.5-turbo',
-//   messages: [{ role: 'user', content: 'Say this is a test!' }],
-//   temperature: 0.2,
-// }
-
-// result:
-
-// definitionInEnglish: 'a hot drink made from the roasted and ground seeds (coffee beans) of a tropical shrub'
-// exampleInEnglish: 'I need a cup of coffee to wake me up in the morning.'
-// turkishTranslation: 'kahve'
-// word: 'coffee'
+const getUserMessage = (searchText) => {
+  return `searchText: '${searchText}'`
+}
 
 const LatestPage = () => {
-  const [dictionaryresult, setDictionaryResult] = useState(null)
+  const [searchResult, setSearchResult] = useState(null)
   const [searchText, setSearchText] = useState('')
   const searchButtonRef = useRef(null) // Trigger search with 'Enter' key
   const [loading, setLoading] = useState(false)
 
-  const getDictionaryResult = () => {
+  const getSearchResult = () => {
     setLoading(true)
-    fetch('https://api.openai.com/v1/completions', {
+    fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${process.env.REDWOOD_ENV_OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo-instruct',
+        model: 'gpt-3.5-turbo',
         // messages: [{ role: 'user', content: getPrompt(searchText) }],
-        prompt: getPrompt(searchText),
-        max_tokens: 128,
-        temperature: 0.2,
+        // prompt: getPrompt(searchText),
+        messages: [
+          {
+            role: 'system',
+            content: getSystemMessage(searchText, ['English', 'Turkish']),
+          },
+          {
+            role: 'user',
+            content: getUserMessage(searchText),
+          },
+        ],
+        temperature: 0,
+        max_tokens: 200,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        // setDictionaryResult(data.choices[0].text) string to object
-        console.log(data.choices[0].text)
-        setDictionaryResult(JSON.parse(data.choices[0].text))
+        // setSearchResult(data.choices[0].text) string to object
+        console.log('data', data.choices[0].message.content)
+        setSearchResult(JSON.parse(data.choices[0].message.content))
         setLoading(false)
       })
       .catch((error) => {
-        // Handle errors here
-        console.error('Error:', error)
         setLoading(false)
       })
   }
@@ -67,7 +86,7 @@ const LatestPage = () => {
       loading={loading}
       icon={<ArrowUpOutlined />}
       onClick={() => {
-        getDictionaryResult()
+        getSearchResult()
         setSearchText('')
       }}
       htmlType="submit"
@@ -125,27 +144,37 @@ const LatestPage = () => {
           }}
         >
           <Space direction="vertical">
-            {dictionaryresult && (
+            {searchResult && (
               <>
                 <div
                   style={{ color: blue.primary, fontSize: 20, fontWeight: 600 }}
                 >
-                  {dictionaryresult.word}
+                  {searchResult.word}
                 </div>
                 <div
                   style={{ color: gray.primary, fontSize: 16, fontWeight: 400 }}
                 >
-                  {dictionaryresult.definitionInEnglish}
+                  {searchResult.definitionInEnglish}
                 </div>
                 <div
                   style={{ color: gray.primary, fontSize: 16, fontWeight: 400 }}
                 >
-                  {dictionaryresult.exampleInEnglish}
+                  {searchResult.cefrLevel}
                 </div>
                 <div
                   style={{ color: gray.primary, fontSize: 16, fontWeight: 400 }}
                 >
-                  {dictionaryresult.turkishTranslation}
+                  {searchResult.partOfSpeech}
+                </div>
+                <div
+                  style={{ color: gray.primary, fontSize: 16, fontWeight: 400 }}
+                >
+                  {searchResult.exampleInEnglish}
+                </div>
+                <div
+                  style={{ color: gray.primary, fontSize: 16, fontWeight: 400 }}
+                >
+                  {searchResult.turkishTranslation}
                 </div>
               </>
             )}

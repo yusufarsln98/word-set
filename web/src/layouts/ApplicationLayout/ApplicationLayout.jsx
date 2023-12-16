@@ -1,15 +1,14 @@
 import {
+  //
   Button,
   Dropdown,
   Flex,
   Image,
-  Input,
   Layout,
   Menu,
   Space,
   theme,
 } from 'antd'
-import Search from 'antd/es/input/Search'
 
 import { Link, routes } from '@redwoodjs/router'
 
@@ -25,7 +24,7 @@ const ApplicationLayout = ({ children }) => {
   } = useAuth()
 
   const {
-    token: { colorBgContainer, colorBgLayout, colorBorder },
+    token: { colorBgContainer, colorBgLayout, colorBorder, boxShadowTertiary },
   } = theme.useToken()
 
   const headerMenuItems = [
@@ -104,6 +103,7 @@ const ApplicationLayout = ({ children }) => {
             background: colorBgContainer,
             userSelect: 'none',
             borderBottom: `1px solid ${colorBorder}`,
+            boxShadow: boxShadowTertiary,
           }}
         >
           <Flex justify="space-between" align="center">
@@ -181,6 +181,7 @@ const ApplicationLayout = ({ children }) => {
           style={{
             minHeight: 'calc(100vh - 64px - 69px)',
             minWidth: '100%',
+            padding: '0 50px', // 0 for top and bottom, 50px for left and right
           }}
         >
           {children}

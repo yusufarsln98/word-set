@@ -9,10 +9,12 @@ generator client {
 }
 
 enum Language {
-  EN
-  TR
-  ES
-  DE
+  English
+  Turkish
+  Spanish
+  German
+  French
+  Italian
 }
 
 enum Role {
@@ -63,8 +65,8 @@ model User {
 model UserConfig {
   id                  Int         @id @default(autoincrement())
 
-  avatar              Avatar      @relation(fields: [avatarId], references: [id])
-  avatarId            Int         // from start, this will be assigned randomly by server
+  avatar              Avatar?      @relation(fields: [avatarId], references: [id])
+  avatarId            Int?         // from start, this will be assigned randomly by server
   birthday            DateTime?
   gender              Gender?
   theme               Theme       @default(LIGHT)
@@ -145,6 +147,8 @@ model Card {
   translation         String
   definition          String
   example             String
+  cefrLevel           String
+  partOfSpeech        String
 
   word                Word        @relation(fields: [wordId], references: [id])
   wordId              Int

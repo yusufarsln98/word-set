@@ -1,46 +1,53 @@
 import { useRef } from 'react'
 import { useEffect } from 'react'
 
+import { gray } from '@ant-design/colors'
+import { GoogleOutlined } from '@ant-design/icons'
 import {
+  Flex,
+  Button,
+  Image,
+  Input,
+  Space,
+  theme,
   Form,
-  Label,
-  TextField,
-  PasswordField,
-  Submit,
-  FieldError,
-} from '@redwoodjs/forms'
+  message,
+  Divider,
+  Card,
+} from 'antd'
+import { Header } from 'antd/es/layout/layout'
+import Paragraph from 'antd/es/typography/Paragraph'
+import Title from 'antd/es/typography/Title'
+
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/LoginAndSignupPageLayout'
 
 const LoginPage = () => {
-  const { isAuthenticated, logIn } = useAuth()
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate(routes.home())
-    }
-  }, [isAuthenticated])
+  const { logIn } = useAuth()
+  const {
+    token: { colorLink },
+  } = theme.useToken()
 
   const emailOrUsernameRef = useRef(null)
   useEffect(() => {
     emailOrUsernameRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data) => {
+  const onFinish = async (data) => {
     const response = await logIn({
       username: data.emailOrUsername,
       password: data.password,
     })
 
     if (response.message) {
-      toast(response.message)
+      message(response.message)
     } else if (response.error) {
-      toast.error(response.error)
+      message.error(response.error)
     } else {
-      toast.success('Welcome back!')
+      message.success('Welcome back!')
     }
   }
 
@@ -48,88 +55,122 @@ const LoginPage = () => {
     <>
       <MetaTags title="Login" />
 
-      <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Login</h2>
-            </header>
-
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="emailOrUsername"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
+      <LoginAndSignupPageLayout>
+        <Flex justify="center" align="center" height="100%">
+          <Card
+            bordered={false}
+            // hide shadow
+            style={{
+              boxShadow: 'none',
+              marginTop: '64px',
+            }}
+          >
+            <Flex
+              vertical
+              align="center"
+              style={{
+                minWidth: '360px',
+                minHeight: '480px',
+              }}
+            >
+              <Title level={2}>Login</Title>
+              <Flex
+                vertical
+                align="center"
+                style={{
+                  marginTop: '32px',
+                  width: '100%',
+                }}
+              >
+                <Paragraph>
+                  Don&apos;t have an account? {/* link with underline */}
+                  <Paragraph
+                    style={{
+                      display: 'inline',
+                      textDecoration: 'underline',
+                      color: colorLink,
+                    }}
                   >
-                    Email or Username
-                  </Label>
-                  <TextField
+                    <Link color={colorLink} to={routes.signup()}>
+                      Sign up!
+                    </Link>
+                  </Paragraph>
+                </Paragraph>
+                <Button icon={<GoogleOutlined />} size="large">
+                  Login with your Google account
+                </Button>
+                <Divider
+                  style={{
+                    margin: '32px 0',
+                  }}
+                >
+                  <span
+                    style={{
+                      color: gray[5],
+                      fontSize: '1rem',
+                    }}
+                  >
+                    or
+                  </span>
+                </Divider>
+                <Form
+                  onFinish={onFinish}
+                  style={{
+                    width: '100%',
+                  }}
+                  size="large"
+                  layout="vertical"
+                >
+                  <Form.Item
                     name="emailOrUsername"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailOrUsernameRef}
-                    validation={{
-                      required: {
-                        value: true,
+                    rules={[
+                      {
+                        required: true,
                         message: 'Email or Username is required',
                       },
-                    }}
-                  />
-
-                  <FieldError
-                    name="emailOrUsername"
-                    className="rw-field-error"
-                  />
-
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
+                    ]}
                   >
-                    Password
-                  </Label>
-                  <PasswordField
+                    <Input
+                      ref={emailOrUsernameRef}
+                      placeholder="Email or Username"
+                    />
+                  </Form.Item>
+                  <Form.Item
                     name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
+                    rules={[
+                      {
+                        required: true,
                         message: 'Password is required',
                       },
-                    }}
-                  />
-
-                  <div className="rw-forgot-link">
-                    <Link
-                      to={routes.forgotPassword()}
-                      className="rw-forgot-link"
+                    ]}
+                  >
+                    <Input.Password placeholder="Password" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Space
+                      direction="vertical"
+                      style={{
+                        width: '100%',
+                      }}
                     >
-                      Forgot Password?
-                    </Link>
-                  </div>
-
-                  <FieldError name="password" className="rw-field-error" />
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Login</Submit>
-                  </div>
+                      <Link to={routes.forgotPassword()}>Forgot Password?</Link>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        style={{
+                          width: '100%',
+                        }}
+                      >
+                        Login
+                      </Button>
+                    </Space>
+                  </Form.Item>
                 </Form>
-              </div>
-            </div>
-          </div>
-          <div className="rw-login-link">
-            <span>Don&apos;t have an account?</span>{' '}
-            <Link to={routes.signup()} className="rw-link">
-              Sign up!
-            </Link>
-          </div>
-        </div>
-      </main>
+              </Flex>
+            </Flex>
+          </Card>
+        </Flex>
+      </LoginAndSignupPageLayout>
     </>
   )
 }

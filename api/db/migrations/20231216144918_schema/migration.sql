@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Language" AS ENUM ('EN', 'TR', 'ES', 'DE');
+CREATE TYPE "Language" AS ENUM ('English', 'Turkish', 'Spanish', 'German');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'PREMIUM_USER', 'USER');
@@ -104,6 +104,8 @@ CREATE TABLE "Card" (
     "translation" TEXT NOT NULL,
     "definition" TEXT NOT NULL,
     "example" TEXT NOT NULL,
+    "cefrLevel" TEXT NOT NULL,
+    "partOfSpeech" TEXT NOT NULL,
     "wordId" INTEGER NOT NULL,
 
     CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
