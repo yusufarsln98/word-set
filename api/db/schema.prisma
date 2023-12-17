@@ -39,9 +39,9 @@ enum Theme {
 
 // -------- User --------
 model Avatar {
-  id      Int     @id @default(autoincrement())
-  data    String  // Base64 Encoded Image
-  userConfig UserConfig[] // Hide this field from client
+  id          Int     @id @default(autoincrement())
+  data        String  // Base64 Encoded Image
+  userConfig  UserConfig[] // Hide this field from client
 }
 
 model User {
@@ -61,7 +61,6 @@ model User {
   userConfig          UserConfig?
 
   folders             Folder[]
-  sets                Set[]
 }
 
 model UserConfig {
@@ -69,7 +68,7 @@ model UserConfig {
 
   avatar              Avatar?      @relation(fields: [avatarId], references: [id])
   avatarId            Int?
-  defaultAvatarIndex  Int?         // from start, this will be assigned randomly by server
+  defaultAvatarIndex  Int         // from start, this will be assigned randomly by server
   birthday            DateTime?
   gender              Gender?
   theme               Theme       @default(LIGHT)
@@ -104,9 +103,6 @@ model Set {
 
   termsLanguage         Language
   translationsLanguage  Language
-
-  user                  User?        @relation(fields: [userId], references: [id])
-  userId                Int?
 
   folder                Folder?     @relation(fields: [folderId], references: [id])
   folderId              Int?
