@@ -23,7 +23,6 @@ import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/LoginAndSignupPageLayout'
 
 const LoginPage = () => {
   const { logIn } = useAuth()
@@ -55,122 +54,120 @@ const LoginPage = () => {
     <>
       <MetaTags title="Login" />
 
-      <LoginAndSignupPageLayout>
-        <Flex justify="center" align="center" height="100%">
-          <Card
-            bordered={false}
-            // hide shadow
+      <Flex justify="center" align="center" height="100%">
+        <Card
+          bordered={false}
+          // hide shadow
+          style={{
+            boxShadow: 'none',
+            marginTop: '64px',
+          }}
+        >
+          <Flex
+            vertical
+            align="center"
             style={{
-              boxShadow: 'none',
-              marginTop: '64px',
+              minWidth: '360px',
+              minHeight: '480px',
             }}
           >
+            <Title level={2}>Login</Title>
             <Flex
               vertical
               align="center"
               style={{
-                minWidth: '360px',
-                minHeight: '480px',
+                marginTop: '32px',
+                width: '100%',
               }}
             >
-              <Title level={2}>Login</Title>
-              <Flex
-                vertical
-                align="center"
+              <Paragraph>
+                Don&apos;t have an account? {/* link with underline */}
+                <Paragraph
+                  style={{
+                    display: 'inline',
+                    textDecoration: 'underline',
+                    color: colorLink,
+                  }}
+                >
+                  <Link color={colorLink} to={routes.signup()}>
+                    Sign up!
+                  </Link>
+                </Paragraph>
+              </Paragraph>
+              <Button icon={<GoogleOutlined />} size="large">
+                Login with your Google account
+              </Button>
+              <Divider
                 style={{
-                  marginTop: '32px',
-                  width: '100%',
+                  margin: '32px 0',
                 }}
               >
-                <Paragraph>
-                  Don&apos;t have an account? {/* link with underline */}
-                  <Paragraph
-                    style={{
-                      display: 'inline',
-                      textDecoration: 'underline',
-                      color: colorLink,
-                    }}
-                  >
-                    <Link color={colorLink} to={routes.signup()}>
-                      Sign up!
-                    </Link>
-                  </Paragraph>
-                </Paragraph>
-                <Button icon={<GoogleOutlined />} size="large">
-                  Login with your Google account
-                </Button>
-                <Divider
+                <span
                   style={{
-                    margin: '32px 0',
+                    color: gray[5],
+                    fontSize: '1rem',
                   }}
                 >
-                  <span
+                  or
+                </span>
+              </Divider>
+              <Form
+                onFinish={onFinish}
+                style={{
+                  width: '100%',
+                }}
+                size="large"
+                layout="vertical"
+              >
+                <Form.Item
+                  name="emailOrUsername"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Email or Username is required',
+                    },
+                  ]}
+                >
+                  <Input
+                    ref={emailOrUsernameRef}
+                    placeholder="Email or Username"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: 'Password is required',
+                    },
+                  ]}
+                >
+                  <Input.Password placeholder="Password" />
+                </Form.Item>
+                <Form.Item>
+                  <Space
+                    direction="vertical"
                     style={{
-                      color: gray[5],
-                      fontSize: '1rem',
+                      width: '100%',
                     }}
                   >
-                    or
-                  </span>
-                </Divider>
-                <Form
-                  onFinish={onFinish}
-                  style={{
-                    width: '100%',
-                  }}
-                  size="large"
-                  layout="vertical"
-                >
-                  <Form.Item
-                    name="emailOrUsername"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Email or Username is required',
-                      },
-                    ]}
-                  >
-                    <Input
-                      ref={emailOrUsernameRef}
-                      placeholder="Email or Username"
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="password"
-                    rules={[
-                      {
-                        required: true,
-                        message: 'Password is required',
-                      },
-                    ]}
-                  >
-                    <Input.Password placeholder="Password" />
-                  </Form.Item>
-                  <Form.Item>
-                    <Space
-                      direction="vertical"
+                    <Link to={routes.forgotPassword()}>Forgot Password?</Link>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
                       style={{
                         width: '100%',
                       }}
                     >
-                      <Link to={routes.forgotPassword()}>Forgot Password?</Link>
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        style={{
-                          width: '100%',
-                        }}
-                      >
-                        Login
-                      </Button>
-                    </Space>
-                  </Form.Item>
-                </Form>
-              </Flex>
+                      Login
+                    </Button>
+                  </Space>
+                </Form.Item>
+              </Form>
             </Flex>
-          </Card>
-        </Flex>
-      </LoginAndSignupPageLayout>
+          </Flex>
+        </Card>
+      </Flex>
     </>
   )
 }

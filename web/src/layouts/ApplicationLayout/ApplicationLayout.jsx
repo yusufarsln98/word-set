@@ -179,8 +179,7 @@ const ApplicationLayout = ({ children }) => {
 
         <Content
           style={{
-            minHeight: 'calc(100vh - 64px - 69px)',
-            minWidth: '100%',
+            minHeight: 'calc(100vh - 64px)', // 64px is the height of the header
             padding: '0 50px', // 0 for top and bottom, 50px for left and right
           }}
         >

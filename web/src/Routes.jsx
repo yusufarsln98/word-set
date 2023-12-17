@@ -11,8 +11,11 @@ import {
   Router,
   Route,
   PrivateSet,
+  Set,
   // Set // When layout is needed, this will be used
 } from '@redwoodjs/router'
+
+import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/LoginAndSignupPageLayout'
 
 import { useAuth } from './auth'
 import ApplicationLayout from './layouts/ApplicationLayout/ApplicationLayout'
@@ -20,10 +23,12 @@ import ApplicationLayout from './layouts/ApplicationLayout/ApplicationLayout'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/login" page={LoginPage} name="login" />
-      <Route path="/signup" page={SignupPage} name="signup" />
-      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
-      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+      <Set wrap={LoginAndSignupPageLayout}>
+        <Route path="/login" page={LoginPage} name="login" />
+        <Route path="/signup" page={SignupPage} name="signup" />
+        <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+        <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
+      </Set>
       <PrivateSet unauthenticated="home" wrap={ApplicationLayout}>
         <Route path="/latest" page={LatestPage} name="latest" />
       </PrivateSet>

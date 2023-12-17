@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Language" AS ENUM ('English', 'Turkish', 'Spanish', 'German');
+CREATE TYPE "Language" AS ENUM ('English', 'Turkish', 'Spanish', 'German', 'French', 'Italian');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'PREMIUM_USER', 'USER');
@@ -38,7 +38,7 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "UserConfig" (
     "id" SERIAL NOT NULL,
-    "avatarId" INTEGER NOT NULL,
+    "avatarId" INTEGER,
     "birthday" TIMESTAMP(3),
     "gender" "Gender",
     "theme" "Theme" NOT NULL DEFAULT 'LIGHT',
@@ -124,7 +124,7 @@ CREATE UNIQUE INDEX "UserConfig_userId_key" ON "UserConfig"("userId");
 CREATE UNIQUE INDEX "Word_termSearch_key" ON "Word"("termSearch");
 
 -- AddForeignKey
-ALTER TABLE "UserConfig" ADD CONSTRAINT "UserConfig_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "Avatar"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserConfig" ADD CONSTRAINT "UserConfig_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "Avatar"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserConfig" ADD CONSTRAINT "UserConfig_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -24,67 +24,58 @@ import {
   theme,
 } from 'antd'
 
-import { Link, navigate, routes } from '@redwoodjs/router'
+import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/LoginAndSignupPageLayout'
 
 const { Title, Paragraph } = Typography
 
 const LANGUAGE_OPTIONS = [
   {
     label: 'English',
-    value: 'en',
     url: '/languages/english.png',
     emoji: '🇬🇧',
     greeting: 'Hello!',
   },
   {
     label: 'French',
-    value: 'fr',
     url: '/languages/french.png',
     emoji: '🇫🇷',
     greeting: 'Bonjour!',
   },
   {
     label: 'Turkish',
-    value: 'tr',
     url: '/languages/turkish.png',
     emoji: '🇹🇷',
     greeting: 'Merhaba!',
   },
   {
     label: 'Spanish',
-    value: 'es',
     url: '/languages/spanish.png',
     emoji: '🇪🇸',
     greeting: '¡Hola!',
   },
   {
     label: 'German',
-    value: 'de',
     url: '/languages/german.png',
     emoji: '🇩🇪',
     greeting: 'Hallo!',
   },
   {
     label: 'Italian',
-    value: 'it',
     url: '/languages/italian.png',
     emoji: '🇮🇹',
     greeting: 'Ciao!',
   },
   {
     label: 'Portuguese',
-    value: 'pt',
     url: '/languages/portuguese.png',
     emoji: '🇵🇹',
     greeting: 'Olá!',
   },
   {
     label: 'Japanese',
-    value: 'ja',
     url: '/languages/japanese.png',
     emoji: '🇯🇵',
     greeting: 'こんにちは!',
@@ -116,6 +107,8 @@ const SignupPage = () => {
     const response = await signUp({
       username: data.emailOrUsername,
       password: data.password,
+      languageNative: nativeLanguage.label,
+      languageLearning: learningLanguage.label,
     })
 
     if (response.message) {
@@ -153,9 +146,7 @@ const SignupPage = () => {
           <Flex
             align="center"
             justify="space-between"
-            style={{
-              width: '100%',
-            }}
+            style={{ width: '100%' }}
           >
             <Button
               onClick={() => prev()}
@@ -166,9 +157,7 @@ const SignupPage = () => {
             <Title level={3}>Which language do you want to learn?</Title>
             <div
               // width of button to center the title
-              style={{
-                width: '64px',
-              }}
+              style={{ width: '64px' }}
             ></div>
           </Flex>
           <SelectLanguage
@@ -189,24 +178,17 @@ const SignupPage = () => {
             <Card
               bordered={false}
               // hide shadow
-              style={{
-                boxShadow: 'none',
-              }}
+              style={{ boxShadow: 'none' }}
             >
               <Flex
                 vertical
                 align="center"
-                style={{
-                  minWidth: '360px',
-                  minHeight: '480px',
-                }}
+                style={{ minWidth: '360px', minHeight: '480px' }}
               >
                 <Flex
                   align="center"
                   justify="space-between"
-                  style={{
-                    width: '100%',
-                  }}
+                  style={{ width: '100%' }}
                 >
                   <Button
                     onClick={() => prev()}
@@ -214,23 +196,18 @@ const SignupPage = () => {
                     icon={<ArrowLeftOutlined />}
                     title='Go back to "Learning Language" step'
                   />
-                  <Title level={3}>
+                  <Title level={3} style={{ margin: '0' }}>
                     {learningLanguage?.greeting} {learningLanguage?.emoji}
                   </Title>
                   <div
                     // width of button to center the title
-                    style={{
-                      width: '64px',
-                    }}
+                    style={{ width: '64px' }}
                   ></div>
                 </Flex>
                 <Flex
                   vertical
                   align="center"
-                  style={{
-                    marginTop: '32px',
-                    width: '100%',
-                  }}
+                  style={{ marginTop: '32px', width: '100%' }}
                 >
                   <Paragraph>
                     Already have an account? {/* link with underline */}
@@ -249,32 +226,15 @@ const SignupPage = () => {
                   <Button icon={<GoogleOutlined />} size="large">
                     Signup with your Google account
                   </Button>
-                  <Divider
-                    style={{
-                      margin: '32px 0',
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: gray[5],
-                        fontSize: '1rem',
-                      }}
-                    >
-                      or
-                    </span>
+                  <Divider style={{ margin: '32px 0' }}>
+                    <span style={{ color: gray[5], fontSize: '1rem' }}>or</span>
                   </Divider>
-                  <Paragraph
-                    style={{
-                      color: gray[5],
-                    }}
-                  >
+                  <Paragraph style={{ color: gray[5] }}>
                     Signup With You Email
                   </Paragraph>
                   <Form
                     onFinish={onFinish}
-                    style={{
-                      width: '100%',
-                    }}
+                    style={{ width: '100%' }}
                     size="large"
                     layout="vertical"
                   >
@@ -312,9 +272,7 @@ const SignupPage = () => {
                       <Button
                         type="primary"
                         htmlType="submit"
-                        style={{
-                          width: '100%',
-                        }}
+                        style={{ width: '100%' }}
                       >
                         Signup
                       </Button>
@@ -337,116 +295,28 @@ const SignupPage = () => {
   return (
     <>
       <MetaTags title="Signup" />
-      <LoginAndSignupPageLayout>
-        <Flex
-          vertical
-          style={{
-            width: '100%',
-            height: '100%',
-          }}
-        >
-          <Steps
-            current={currentStep}
-            items={items}
-            style={{
-              marginTop: 24,
-              width: '100%',
-            }}
-          />
-          <Flex
-            vertical
-            align="center"
-            style={{
-              marginTop: 48,
-              width: '100%',
-            }}
-          >
-            {steps[currentStep].content}
-          </Flex>
+      <Flex
+        vertical
+        style={{
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <Steps
+          current={currentStep}
+          items={items}
+          style={{ marginTop: 24, width: '100%' }}
+        />
+        <Flex vertical align="center" style={{ marginTop: 48, width: '100%' }}>
+          {steps[currentStep].content}
         </Flex>
-      </LoginAndSignupPageLayout>
+      </Flex>
     </>
   )
 }
 
 export default SignupPage
 
-{
-  /* <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Signup</h2>
-            </header>
-
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <Label
-                    name="emailOrUsername"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Email or Username
-                  </Label>
-                  <TextField
-                    name="emailOrUsername"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={emailOrUsernameRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Email or Username is required',
-                      },
-                    }}
-                  />
-
-                  <FieldError
-                    name="emailOrUsername"
-                    className="rw-field-error"
-                  />
-
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Password
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Password is required',
-                      },
-                    }}
-                  />
-
-                  <FieldError name="password" className="rw-field-error" />
-
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">
-                      Sign Up
-                    </Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-          <div className="rw-login-link">
-            <span>Already have an account?</span>{' '}
-            <Link to={routes.login()} className="rw-link">
-              Log in!
-            </Link>
-          </div>
-        </div>
-      </main> */
-}
 const SelectLanguage = ({
   selectedLanguage,
   setSelectedLanguage,
@@ -459,14 +329,14 @@ const SelectLanguage = ({
   return (
     <Row gutter={[16, 16]}>
       {LANGUAGE_OPTIONS.map((language) => (
-        <Col span={6} key={language.value}>
+        <Col span={6} key={language.label}>
           <Card
             // if cannot be selected, then not hoverable, otherwise hoverable
-            hoverable={languageCannotBeSelected?.value !== language.value}
+            hoverable={languageCannotBeSelected?.label !== language.label}
             title={language.label}
             onClick={() => {
               // if it cannot be selected, then do nothing
-              if (languageCannotBeSelected?.value === language.value) {
+              if (languageCannotBeSelected?.label === language.label) {
                 message.warning(
                   `You can select a language either as your native language or as your learning language, but not both!`
                 )
@@ -482,10 +352,10 @@ const SelectLanguage = ({
             // if it is selected, then it has a border
             style={{
               border:
-                selectedLanguage && selectedLanguage.value === language.value
+                selectedLanguage && selectedLanguage.label === language.label
                   ? `2px solid ${blue[2]}`
                   : // if it cannot be selected, then it has a border
-                  languageCannotBeSelected?.value === language.value
+                  languageCannotBeSelected?.label === language.label
                   ? `2px solid ${gray[0]}`
                   : '2px solid transparent',
             }}
@@ -493,10 +363,7 @@ const SelectLanguage = ({
             <Flex align="center" justify="center">
               <Image
                 src={language.url}
-                style={{
-                  maxHeight: '100px',
-                  maxWidth: '100px',
-                }}
+                style={{ maxHeight: '100px', maxWidth: '100px' }}
                 preview={false}
               />
             </Flex>

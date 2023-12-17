@@ -106,7 +106,7 @@ export const handler = async (event, context) => {
       username,
       hashedPassword,
       salt,
-      // userAttributes // this will be changed when name, username, birthday, etc. are added
+      userAttributes, // this will be changed when name, username, birthday, etc. are added
     }) => {
       return db.user.create({
         data: {
@@ -115,6 +115,13 @@ export const handler = async (event, context) => {
           salt: salt,
           name: username,
           username: username,
+          userConfig: {
+            create: {
+              theme: 'LIGHT',
+              languageNative: userAttributes.languageNative,
+              languageLearning: userAttributes.languageLearning,
+            },
+          },
         },
       })
     },

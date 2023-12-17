@@ -10,11 +10,13 @@ generator client {
 
 enum Language {
   English
+  French
   Turkish
   Spanish
   German
-  French
   Italian
+  Portuguese
+  Japanese
 }
 
 enum Role {
@@ -66,7 +68,8 @@ model UserConfig {
   id                  Int         @id @default(autoincrement())
 
   avatar              Avatar?      @relation(fields: [avatarId], references: [id])
-  avatarId            Int?         // from start, this will be assigned randomly by server
+  avatarId            Int?
+  defaultAvatarIndex  Int?         // from start, this will be assigned randomly by server
   birthday            DateTime?
   gender              Gender?
   theme               Theme       @default(LIGHT)
@@ -115,9 +118,16 @@ model FlashCard {
   id                  Int         @id @default(autoincrement())
 
   term                String
-  translation         String
-  definition          String
-  example             String
+  // translation         String
+  // definition          String
+  // example             String
+  // cefrLevel           String
+  // partOfSpeech        String
+
+  // each flashcard has a Card object and boost value
+  card                Card        @relation(fields: [cardId], references: [id])
+  cardId              Int
+
   boost               Float       @default(1)
 
   set                 Set         @relation(fields: [setId], references: [id])
@@ -152,4 +162,7 @@ model Card {
 
   word                Word        @relation(fields: [wordId], references: [id])
   wordId              Int
+
+  flashCards          FlashCard[]
+
 }
