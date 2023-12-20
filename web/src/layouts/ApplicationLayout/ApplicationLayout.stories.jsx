@@ -1,4 +1,4 @@
-import ApplicationLayout from './ApplicationLayout'
+import ApplicationLayout from './ApplicationLayout.1'
 
 const meta = {
   component: ApplicationLayout,

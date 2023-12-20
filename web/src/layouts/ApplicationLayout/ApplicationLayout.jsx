@@ -1,182 +1,33 @@
 import {
-  //
-  Button,
-  Dropdown,
   Flex,
-  Image,
   Layout,
-  Menu,
-  Space,
   theme,
+  //
 } from 'antd'
 
-import { Link, routes } from '@redwoodjs/router'
+import ApplicationLayoutHeader from './ApplicationLayoutHeader/ApplicationLayoutHeader'
 
-import { useAuth } from 'src/auth'
+const { Content, Footer } = Layout
 
-const { Header, Content, Footer } = Layout
+// breakpoints
+// {
+//   xs: '480px',
+//   sm: '576px',
+//   md: '768px',
+//   lg: '992px',
+//   xl: '1200px',
+//   xxl: '1600px',
+// }
 
 const ApplicationLayout = ({ children }) => {
   const {
-    // isAuthenticated,
-    // currentUser,
-    logOut,
-  } = useAuth()
-
-  const {
-    token: { colorBgContainer, colorBgLayout, colorBorder, boxShadowTertiary },
+    token: { colorBgContainer, colorBorder },
   } = theme.useToken()
-
-  const headerMenuItems = [
-    {
-      key: '1',
-      label: (
-        <>
-          <Link to={routes.latest()}>Latest</Link>
-        </>
-      ),
-    },
-    {
-      key: '2',
-      label: 'nav 2',
-    },
-    {
-      key: '3',
-      label: 'nav 3',
-    },
-  ]
-
-  const addDropdownMenuItems = [
-    {
-      key: '1',
-      label: <>1st menu item</>,
-    },
-    {
-      key: '2',
-      label: <>2nd menu item</>,
-    },
-    {
-      key: '3',
-      label: <>3rd menu item</>,
-    },
-  ]
-
-  const notificationDropdownMenuItems = [
-    {
-      key: '1',
-      label: <>1st menu item</>,
-    },
-    {
-      key: '2',
-      label: <>2nd menu item</>,
-    },
-    {
-      key: '3',
-      label: <>3rd menu item</>,
-    },
-  ]
-
-  const userDropdownMenuItems = [
-    {
-      key: '1',
-      label: <>1st menu item</>,
-    },
-    {
-      key: '2',
-      label: <>2nd menu item</>,
-    },
-    {
-      key: '3',
-      label: (
-        <>
-          <Button onClick={logOut}>Log Out</Button>
-        </>
-      ),
-    },
-  ]
 
   return (
     <>
-      <Layout className="layout">
-        <Header
-          style={{
-            background: colorBgContainer,
-            userSelect: 'none',
-            borderBottom: `1px solid ${colorBorder}`,
-            boxShadow: boxShadowTertiary,
-          }}
-        >
-          <Flex justify="space-between" align="center">
-            <Flex justify="flex-start" align="center">
-              <Link
-                to={routes.home()} // later can be changed with routes.latest()
-              >
-                <Image
-                  src="/logo/Logo-Text.svg"
-                  preview={false}
-                  width="120px"
-                />
-              </Link>
-              <Menu
-                mode="horizontal"
-                defaultSelectedKeys={['1']}
-                items={headerMenuItems}
-                style={{
-                  background: colorBgContainer,
-                  borderBottom: `1px solid ${colorBorder}`,
-                }}
-              />
-              {/* <Search
-                // type="search"
-                placeholder="Search"
-                onSearch={(value) => alert(value)}
-              /> */}
-            </Flex>
-            <Space>
-              <Dropdown
-                trigger={['click']}
-                menu={{
-                  items: addDropdownMenuItems,
-                }}
-                placement="bottomLeft"
-              >
-                <Button>Add</Button>
-              </Dropdown>
-              <Dropdown
-                trigger={['click']}
-                menu={{
-                  items: notificationDropdownMenuItems,
-                }}
-                placement="bottomLeft"
-              >
-                <Button
-                  style={{
-                    background: colorBgLayout,
-                  }}
-                >
-                  Notification
-                </Button>
-              </Dropdown>
-
-              <Dropdown
-                trigger={['click']}
-                menu={{
-                  items: userDropdownMenuItems,
-                }}
-                placement="bottomLeft"
-              >
-                <Button
-                  style={{
-                    background: colorBgLayout,
-                  }}
-                >
-                  User Icon
-                </Button>
-              </Dropdown>
-            </Space>
-          </Flex>
-        </Header>
-
+      <Layout className="layout" hashPriority="high">
+        <ApplicationLayoutHeader />
         <Content
           style={{
             minHeight: 'calc(100vh - 64px)', // 64px is the height of the header
