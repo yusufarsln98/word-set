@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Language" AS ENUM ('English', 'Turkish', 'Spanish', 'German', 'French', 'Italian');
+CREATE TYPE "Language" AS ENUM ('English', 'French', 'Turkish', 'Spanish', 'German', 'Italian', 'Portuguese', 'Japanese');
 
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('ADMIN', 'PREMIUM_USER', 'USER');
@@ -39,6 +39,7 @@ CREATE TABLE "User" (
 CREATE TABLE "UserConfig" (
     "id" SERIAL NOT NULL,
     "avatarId" INTEGER,
+    "defaultAvatarIndex" INTEGER NOT NULL DEFAULT 0,
     "birthday" TIMESTAMP(3),
     "gender" "Gender",
     "theme" "Theme" NOT NULL DEFAULT 'LIGHT',
@@ -54,7 +55,8 @@ CREATE TABLE "Folder" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "creatorId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Folder_pkey" PRIMARY KEY ("id")
@@ -65,11 +67,12 @@ CREATE TABLE "Set" (
     "id" SERIAL NOT NULL,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "creatorId" INTEGER NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "termsLanguage" "Language" NOT NULL,
     "translationsLanguage" "Language" NOT NULL,
-    "userId" INTEGER,
     "folderId" INTEGER,
+    "userId" INTEGER,
 
     CONSTRAINT "Set_pkey" PRIMARY KEY ("id")
 );
@@ -78,9 +81,7 @@ CREATE TABLE "Set" (
 CREATE TABLE "FlashCard" (
     "id" SERIAL NOT NULL,
     "term" TEXT NOT NULL,
-    "translation" TEXT NOT NULL,
-    "definition" TEXT NOT NULL,
-    "example" TEXT NOT NULL,
+    "cardId" INTEGER NOT NULL,
     "boost" DOUBLE PRECISION NOT NULL DEFAULT 1,
     "setId" INTEGER NOT NULL,
 
@@ -133,10 +134,13 @@ ALTER TABLE "UserConfig" ADD CONSTRAINT "UserConfig_userId_fkey" FOREIGN KEY ("u
 ALTER TABLE "Folder" ADD CONSTRAINT "Folder_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Set" ADD CONSTRAINT "Set_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "Set" ADD CONSTRAINT "Set_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Set" ADD CONSTRAINT "Set_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "FlashCard" ADD CONSTRAINT "FlashCard_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FlashCard" ADD CONSTRAINT "FlashCard_setId_fkey" FOREIGN KEY ("setId") REFERENCES "Set"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
