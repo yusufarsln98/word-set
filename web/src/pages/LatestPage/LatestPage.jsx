@@ -51,7 +51,7 @@ const LatestPage = () => {
           <Flex vertical>
             <Title level={4}>Your Folders</Title>
             {userFoldersLoading ? (
-              <CardListSkeleton />
+              <CardListSkeleton asymetric />
             ) : (
               <CardListOfUser
                 data={userFoldersData?.user?.folders ?? []}

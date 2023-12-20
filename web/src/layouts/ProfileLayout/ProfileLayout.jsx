@@ -79,6 +79,7 @@ const ProfileLayout = ({ children }) => {
           paddingTop: '32px',
           width: '1200px',
         }}
+        gap={32}
       >
         <Flex style={{ width: '100%' }} gap={16} align="center" justify="start">
           <Avatar

@@ -20,6 +20,7 @@ import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/Login
 import { useAuth } from './auth'
 import ApplicationLayout from './layouts/ApplicationLayout/ApplicationLayout'
 import ProfileLayout from './layouts/ProfileLayout/ProfileLayout'
+import SetAndFolderLayout from './layouts/SetAndFolderLayout/SetAndFolderLayout'
 
 const Routes = () => {
   // const user = useAuth().currentUser
@@ -33,6 +34,9 @@ const Routes = () => {
       </Set>
       <PrivateSet unauthenticated="home" wrap={ApplicationLayout}>
         <Route path="/latest" page={LatestPage} name="latest" />
+        <PrivateSet unauthenticated="home" wrap={SetAndFolderLayout}>
+          <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
+        </PrivateSet>
         <PrivateSet unauthenticated="home" wrap={ProfileLayout}>
           <Route path="/user/{userId:Int}/recent-activities" page={ProfilePage} name="profile" />
           <Route path="/user/{userId:Int}/folders" page={FoldersPage} name="folders" />

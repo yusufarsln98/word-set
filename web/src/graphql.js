@@ -16,6 +16,17 @@ export const FOLDER_QUERY = gql`
       title
       description
       createdAt
+      user {
+        id
+        username
+        userConfig {
+          id
+          defaultAvatarIndex
+        }
+      }
+      sets {
+        id
+      }
     }
   }
 `

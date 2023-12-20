@@ -33,7 +33,6 @@ const ProfilePage = ({ userId }) => {
         style={{
           height: '100%',
           width: 'calc(1200px - 32px)', // 32 = padding * 2 in ProfileLayout
-          marginTop: '32px',
         }}
         gap={16}
       >

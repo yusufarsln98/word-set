@@ -2,9 +2,8 @@ import { gray } from '@ant-design/colors'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { Button, Card, Empty, Flex, Image, Skeleton, Space, Tag } from 'antd'
 
+import styles from 'src/Global.module.scss'
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
-
-import styles from './CardListOfUser.module.scss'
 
 const CardListOfUser = ({ data, quantity }) => {
   return (
@@ -91,7 +90,7 @@ const TheCard = ({ instance, quantity }) => {
 
   return (
     <>
-      <Card className={styles.hoverable} hoverable>
+      <Card className={styles.hoverable}>
         <Flex
           vertical
           align="start"
@@ -150,27 +149,29 @@ const TheCard = ({ instance, quantity }) => {
 
 export default CardListOfUser
 
-export const CardListSkeleton = () => {
+export const CardListSkeleton = ({ asymetric }) => {
   return (
     <>
       <Flex
         gap={24}
         style={{
+          paddingBottom: 24,
           overflowX: 'hidden',
         }}
       >
-        <Card>
+        <Card style={{ backgroundColor: 'transparent' }}>
           <Skeleton style={{ width: 400, height: 120 }} active />
         </Card>
-        <Card>
+        <Card style={{ backgroundColor: 'transparent' }}>
           <Skeleton style={{ width: 400, height: 120 }} active />
         </Card>
-        <Card>
-          <Skeleton style={{ width: 400, height: 120 }} active />
-        </Card>
-        <Card>
-          <Skeleton style={{ width: 400, height: 120 }} active />
-        </Card>
+        {!asymetric && (
+          <>
+            <Card style={{ backgroundColor: 'transparent' }}>
+              <Skeleton style={{ width: 400, height: 120 }} active />
+            </Card>
+          </>
+        )}
       </Flex>
     </>
   )
