@@ -30,14 +30,12 @@ describe('folders', () => {
       input: {
         title: 'String',
         description: 'String',
-        creatorId: 9571377,
         userId: scenario.folder.two.userId,
       },
     })
 
     expect(result.title).toEqual('String')
     expect(result.description).toEqual('String')
-    expect(result.creatorId).toEqual(9571377)
     expect(result.userId).toEqual(scenario.folder.two.userId)
   })
 

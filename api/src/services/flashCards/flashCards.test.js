@@ -29,12 +29,16 @@ describe('flashCards', () => {
     const result = await createFlashCard({
       input: {
         term: 'String',
+        termsLanguage: 'English',
+        translationsLanguage: 'English',
         cardId: scenario.flashCard.two.cardId,
         setId: scenario.flashCard.two.setId,
       },
     })
 
     expect(result.term).toEqual('String')
+    expect(result.termsLanguage).toEqual('English')
+    expect(result.translationsLanguage).toEqual('English')
     expect(result.cardId).toEqual(scenario.flashCard.two.cardId)
     expect(result.setId).toEqual(scenario.flashCard.two.setId)
   })

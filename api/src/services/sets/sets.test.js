@@ -24,7 +24,6 @@ describe('sets', () => {
       input: {
         title: 'String',
         description: 'String',
-        creatorId: 9384223,
         termsLanguage: 'English',
         translationsLanguage: 'English',
       },
@@ -32,7 +31,6 @@ describe('sets', () => {
 
     expect(result.title).toEqual('String')
     expect(result.description).toEqual('String')
-    expect(result.creatorId).toEqual(9384223)
     expect(result.termsLanguage).toEqual('English')
     expect(result.translationsLanguage).toEqual('English')
   })

@@ -3,7 +3,7 @@ export const schema = gql`
     id: Int!
     title: String!
     description: String!
-    creatorId: Int!
+    createdAt: DateTime!
     user: User!
     userId: Int!
     sets: [Set]!
@@ -17,14 +17,12 @@ export const schema = gql`
   input CreateFolderInput {
     title: String!
     description: String!
-    creatorId: Int!
     userId: Int!
   }
 
   input UpdateFolderInput {
     title: String
     description: String
-    creatorId: Int
     userId: Int
   }
 

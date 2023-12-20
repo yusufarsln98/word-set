@@ -32,8 +32,22 @@ export const getCurrentUser = async (session) => {
       email: true,
       name: true,
       roles: true,
-      createdAt: true,
-      userConfig: true,
+      userConfig: {
+        select: {
+          id: true,
+          theme: true,
+          languageNative: true,
+          languageLearning: true,
+          defaultAvatarIndex: true,
+          avatarId: true,
+          avatar: {
+            select: {
+              id: true,
+              data: true,
+            },
+          },
+        },
+      },
     },
   })
 }

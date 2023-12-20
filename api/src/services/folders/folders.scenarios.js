@@ -4,15 +4,14 @@ export const standard = defineScenario({
       data: {
         title: 'String',
         description: 'String',
-        creatorId: 4231199,
         user: {
           create: {
             name: 'String',
-            username: 'String3149478',
-            email: 'String8069720',
+            username: 'String4675687',
+            email: 'String4742757',
             hashedPassword: 'String',
             salt: 'String',
-            daysStudied: '2023-12-17T14:26:33.032Z',
+            daysStudied: '2023-12-20T11:35:00.621Z',
           },
         },
       },
@@ -21,15 +20,14 @@ export const standard = defineScenario({
       data: {
         title: 'String',
         description: 'String',
-        creatorId: 5971913,
         user: {
           create: {
             name: 'String',
-            username: 'String5883928',
-            email: 'String1032569',
+            username: 'String8145631',
+            email: 'String9170933',
             hashedPassword: 'String',
             salt: 'String',
-            daysStudied: '2023-12-17T14:26:33.032Z',
+            daysStudied: '2023-12-20T11:35:00.621Z',
           },
         },
       },

@@ -3,21 +3,21 @@ export const standard = defineScenario({
     one: {
       data: {
         name: 'String',
-        username: 'String5905606',
-        email: 'String1862551',
+        username: 'String1190175',
+        email: 'String8280753',
         hashedPassword: 'String',
         salt: 'String',
-        daysStudied: '2023-12-17T14:25:54.459Z',
+        daysStudied: '2023-12-20T12:56:15.744Z',
       },
     },
     two: {
       data: {
         name: 'String',
-        username: 'String4957993',
-        email: 'String1171871',
+        username: 'String3842458',
+        email: 'String6556328',
         hashedPassword: 'String',
         salt: 'String',
-        daysStudied: '2023-12-17T14:25:54.459Z',
+        daysStudied: '2023-12-20T12:56:15.744Z',
       },
     },
   },

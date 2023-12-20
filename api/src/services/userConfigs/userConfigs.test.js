@@ -28,14 +28,12 @@ describe('userConfigs', () => {
   scenario('creates a userConfig', async (scenario) => {
     const result = await createUserConfig({
       input: {
-        defaultAvatarIndex: 207598,
         languageNative: 'English',
         languageLearning: 'English',
         userId: scenario.userConfig.two.userId,
       },
     })
 
-    expect(result.defaultAvatarIndex).toEqual(207598)
     expect(result.languageNative).toEqual('English')
     expect(result.languageLearning).toEqual('English')
     expect(result.userId).toEqual(scenario.userConfig.two.userId)
@@ -47,10 +45,10 @@ describe('userConfigs', () => {
     })
     const result = await updateUserConfig({
       id: original.id,
-      input: { defaultAvatarIndex: 9525133 },
+      input: { languageNative: 'Japanese' },
     })
 
-    expect(result.defaultAvatarIndex).toEqual(9525133)
+    expect(result.languageNative).toEqual('Japanese')
   })
 
   scenario('deletes a userConfig', async (scenario) => {

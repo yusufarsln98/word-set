@@ -19,8 +19,11 @@ import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/Login
 
 import { useAuth } from './auth'
 import ApplicationLayout from './layouts/ApplicationLayout/ApplicationLayout'
+import ProfileLayout from './layouts/ProfileLayout/ProfileLayout'
+import SetAndFolderLayout from './layouts/SetAndFolderLayout/SetAndFolderLayout'
 
 const Routes = () => {
+  // const user = useAuth().currentUser
   return (
     <Router useAuth={useAuth}>
       <Set wrap={LoginAndSignupPageLayout}>
@@ -31,8 +34,16 @@ const Routes = () => {
       </Set>
       <PrivateSet unauthenticated="home" wrap={ApplicationLayout}>
         <Route path="/latest" page={LatestPage} name="latest" />
+        <PrivateSet unauthenticated="home" wrap={SetAndFolderLayout}>
+          <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
+        </PrivateSet>
+        <PrivateSet unauthenticated="home" wrap={ProfileLayout}>
+          <Route path="/user/{userId:Int}/recent-activities" page={ProfilePage} name="profile" />
+          <Route path="/user/{userId:Int}/folders" page={FoldersPage} name="folders" />
+          <Route path="/user/{userId:Int}/sets" page={SetsPage} name="sets" />
+          <Route path="/user/{userId:Int}/settings" page={SettingsPage} name="settings" />
+        </PrivateSet>
       </PrivateSet>
-
       <PrivateSet unauthenticated="home" roles="ADMIN">
         <Route path="/admin" page={AdminPage} name="admin" />
       </PrivateSet>

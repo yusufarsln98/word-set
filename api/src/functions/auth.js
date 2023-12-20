@@ -120,6 +120,7 @@ export const handler = async (event, context) => {
               theme: 'LIGHT',
               languageNative: userAttributes.languageNative,
               languageLearning: userAttributes.languageLearning,
+              defaultAvatarIndex: Math.floor(Math.random() * 16),
             },
           },
         },

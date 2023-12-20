@@ -4,7 +4,6 @@ export const standard = defineScenario({
       data: {
         title: 'String',
         description: 'String',
-        creatorId: 7520482,
         termsLanguage: 'English',
         translationsLanguage: 'English',
       },
@@ -13,7 +12,6 @@ export const standard = defineScenario({
       data: {
         title: 'String',
         description: 'String',
-        creatorId: 3694909,
         termsLanguage: 'English',
         translationsLanguage: 'English',
       },
