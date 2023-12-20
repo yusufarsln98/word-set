@@ -3,6 +3,8 @@ export const standard = defineScenario({
     one: {
       data: {
         term: 'String',
+        termsLanguage: 'English',
+        translationsLanguage: 'English',
         card: {
           create: {
             translation: 'String',
@@ -13,7 +15,7 @@ export const standard = defineScenario({
             word: {
               create: {
                 term: 'String',
-                termSearch: 'String7670035',
+                termSearch: 'String7089980',
                 termsLanguage: 'English',
                 translationsLanguage: 'English',
               },
@@ -24,7 +26,7 @@ export const standard = defineScenario({
           create: {
             title: 'String',
             description: 'String',
-            creatorId: 3786305,
+            creatorId: 6612581,
             termsLanguage: 'English',
             translationsLanguage: 'English',
           },
@@ -34,6 +36,8 @@ export const standard = defineScenario({
     two: {
       data: {
         term: 'String',
+        termsLanguage: 'English',
+        translationsLanguage: 'English',
         card: {
           create: {
             translation: 'String',
@@ -44,7 +48,7 @@ export const standard = defineScenario({
             word: {
               create: {
                 term: 'String',
-                termSearch: 'String6706166',
+                termSearch: 'String5831096',
                 termsLanguage: 'English',
                 translationsLanguage: 'English',
               },
@@ -55,7 +59,7 @@ export const standard = defineScenario({
           create: {
             title: 'String',
             description: 'String',
-            creatorId: 1107428,
+            creatorId: 7950688,
             termsLanguage: 'English',
             translationsLanguage: 'English',
           },

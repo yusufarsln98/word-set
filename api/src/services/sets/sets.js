@@ -33,6 +33,9 @@ export const Set = {
   folder: (_obj, { root }) => {
     return db.set.findUnique({ where: { id: root?.id } }).folder()
   },
+  user: (_obj, { root }) => {
+    return db.set.findUnique({ where: { id: root?.id } }).user()
+  },
   flashCards: (_obj, { root }) => {
     return db.set.findUnique({ where: { id: root?.id } }).flashCards()
   },

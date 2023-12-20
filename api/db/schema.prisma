@@ -61,14 +61,15 @@ model User {
   userConfig          UserConfig?
 
   folders             Folder[]
+  sets                Set[]
 }
 
 model UserConfig {
   id                  Int         @id @default(autoincrement())
 
-  avatar              Avatar?      @relation(fields: [avatarId], references: [id])
+  avatar              Avatar?     @relation(fields: [avatarId], references: [id])
   avatarId            Int?
-  defaultAvatarIndex  Int         // from start, this will be assigned randomly by server
+  defaultAvatarIndex  Int         @default(0)
   birthday            DateTime?
   gender              Gender?
   theme               Theme       @default(LIGHT)
@@ -85,7 +86,8 @@ model Folder {
 
   title           String
   description     String
-  creatorId       Int         // Folder can be created or copied by other users - this is for credit
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   user            User        @relation(fields: [userId], references: [id])
   userId          Int
@@ -99,13 +101,17 @@ model Set {
 
   title                 String
   description           String
-  creatorId             Int         // Sets can be created or copied by other users - this is for credit
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 
   termsLanguage         Language
   translationsLanguage  Language
 
   folder                Folder?     @relation(fields: [folderId], references: [id])
   folderId              Int?
+
+  user                  User?       @relation(fields: [userId], references: [id])
+  userId                Int?
 
   flashCards            FlashCard[]
 }
@@ -114,11 +120,6 @@ model FlashCard {
   id                  Int         @id @default(autoincrement())
 
   term                String
-  // translation         String
-  // definition          String
-  // example             String
-  // cefrLevel           String
-  // partOfSpeech        String
 
   // each flashcard has a Card object and boost value
   card                Card        @relation(fields: [cardId], references: [id])

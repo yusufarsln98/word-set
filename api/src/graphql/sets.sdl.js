@@ -3,11 +3,13 @@ export const schema = gql`
     id: Int!
     title: String!
     description: String!
-    creatorId: Int!
+    createdAt: DateTime!
     termsLanguage: Language!
     translationsLanguage: Language!
     folder: Folder
     folderId: Int
+    user: User
+    userId: Int
     flashCards: [FlashCard]!
   }
 
@@ -41,19 +43,19 @@ export const schema = gql`
   input CreateSetInput {
     title: String!
     description: String!
-    creatorId: Int!
     termsLanguage: Language!
     translationsLanguage: Language!
     folderId: Int
+    userId: Int
   }
 
   input UpdateSetInput {
     title: String
     description: String
-    creatorId: Int
     termsLanguage: Language
     translationsLanguage: Language
     folderId: Int
+    userId: Int
   }
 
   type Mutation {

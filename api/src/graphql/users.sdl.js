@@ -13,6 +13,7 @@ export const schema = gql`
     daysStudied: [DateTime]!
     userConfig: UserConfig
     folders: [Folder]!
+    sets: [Set]!
   }
 
   enum Role {
