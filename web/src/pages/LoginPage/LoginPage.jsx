@@ -6,7 +6,6 @@ import { GoogleOutlined } from '@ant-design/icons'
 import {
   Flex,
   Button,
-  Image,
   Input,
   Space,
   theme,
@@ -15,17 +14,16 @@ import {
   Divider,
   Card,
 } from 'antd'
-import { Header } from 'antd/es/layout/layout'
 import Paragraph from 'antd/es/typography/Paragraph'
 import Title from 'antd/es/typography/Title'
 
-import { Link, navigate, routes } from '@redwoodjs/router'
+import { Link, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
 
 const LoginPage = () => {
-  const { logIn } = useAuth()
+  const { logIn, loading } = useAuth()
   const {
     token: { colorLink },
   } = theme.useToken()
@@ -39,7 +37,7 @@ const LoginPage = () => {
     const response = await logIn({
       username: data.emailOrUsername,
       password: data.password,
-    })
+    }).finally(() => {})
 
     if (response.message) {
       message(response.message)
@@ -158,6 +156,7 @@ const LoginPage = () => {
                       style={{
                         width: '100%',
                       }}
+                      loading={loading}
                     >
                       Login
                     </Button>

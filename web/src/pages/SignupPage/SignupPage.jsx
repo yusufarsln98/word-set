@@ -84,6 +84,7 @@ const LANGUAGE_OPTIONS = [
 
 const SignupPage = () => {
   const { signUp } = useAuth()
+  const [loading, setLoading] = useState(false)
   const emailOrUsernameRef = useRef(null)
   const [nativeLanguage, setNativeLanguage] = useState(null) // Language Option Value
   const [learningLanguage, setLearningLanguage] = useState(null)
@@ -104,11 +105,14 @@ const SignupPage = () => {
   }, [currentStep])
 
   const onFinish = async (data) => {
+    setLoading(true)
     const response = await signUp({
       username: data.emailOrUsername,
       password: data.password,
       languageNative: nativeLanguage.label,
       languageLearning: learningLanguage.label,
+    }).finally(() => {
+      setLoading(false)
     })
 
     if (response.message) {
@@ -273,6 +277,7 @@ const SignupPage = () => {
                         type="primary"
                         htmlType="submit"
                         style={{ width: '100%' }}
+                        loading={loading}
                       >
                         Signup
                       </Button>
