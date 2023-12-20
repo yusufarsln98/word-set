@@ -1,7 +1,6 @@
 import { db } from 'src/lib/db'
 
 export const users = async () => {
-  // add some delay
   return db.user.findMany()
 }
 
