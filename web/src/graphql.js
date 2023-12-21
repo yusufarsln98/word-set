@@ -122,3 +122,39 @@ export const USER_QUERY_ACTIVITY = gql`
     }
   }
 `
+
+export const CREATE_SET_MUTATION = gql`
+  mutation CreateSetMutation(
+    $title: String!
+    $description: String!
+    $folderId: Int
+    $userId: Int!
+    $termsLanguage: Language!
+    $translationsLanguage: Language!
+    $flashCards: [Int]
+  ) {
+    createSet(
+      input: {
+        title: $title
+        description: $description
+        folderId: $folderId
+        userId: $userId
+        termsLanguage: $termsLanguage
+        translationsLanguage: $translationsLanguage
+        flashCards: $flashCards
+      }
+    ) {
+      id
+      title
+      description
+      createdAt
+      termsLanguage
+      translationsLanguage
+      folderId
+      userId
+      flashCards {
+        id
+      }
+    }
+  }
+`

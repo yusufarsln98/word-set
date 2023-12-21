@@ -383,7 +383,7 @@ const ApplicationLayoutHeader = () => {
                 items: addDropdownMenuItems,
                 onClick: (e) => {
                   e.key == 'createFolder' && setOpenModal(true)
-                  e.key == 'createSet' && message.info('Coming soon!')
+                  e.key == 'createSet' && navigate(routes.createSet())
                 },
               }}
               // set some margin

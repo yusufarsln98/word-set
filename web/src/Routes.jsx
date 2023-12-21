@@ -36,6 +36,9 @@ const Routes = () => {
         <Route path="/latest" page={LatestPage} name="latest" />
         <PrivateSet unauthenticated="home" wrap={SetAndFolderLayout}>
           <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
+          {/* <Route path="/set" page={SetPage} name="set" /> */}
+          <Route path="/set/{setId:Int}" page={SetPage} name="set" />
+          <Route path="/create-set" page={CreateSetPage} name="createSet" />
         </PrivateSet>
         <PrivateSet unauthenticated="home" wrap={ProfileLayout}>
           <Route path="/user/{userId:Int}/recent-activities" page={ProfilePage} name="profile" />

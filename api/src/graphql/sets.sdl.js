@@ -45,8 +45,9 @@ export const schema = gql`
     description: String!
     termsLanguage: Language!
     translationsLanguage: Language!
+    userId: Int!
     folderId: Int
-    userId: Int
+    flashCards: [Int] # FlashCard ids to add
   }
 
   input UpdateSetInput {

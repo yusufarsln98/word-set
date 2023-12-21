@@ -52,7 +52,6 @@ const FoldersList = ({ folders }) => {
 }
 
 const HorizontalFolderCard = ({ folder }) => {
-  console.log('HorizontalFolderCard folder', folder.sets)
   return (
     <>
       <Link to={routes.folder({ folderId: folder.id })}>

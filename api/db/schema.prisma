@@ -110,8 +110,8 @@ model Set {
   folder                Folder?     @relation(fields: [folderId], references: [id])
   folderId              Int?
 
-  user                  User?       @relation(fields: [userId], references: [id])
-  userId                Int?
+  user                  User       @relation(fields: [userId], references: [id])
+  userId                Int
 
   flashCards            FlashCard[]
 }

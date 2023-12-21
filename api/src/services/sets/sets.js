@@ -10,10 +10,29 @@ export const set = ({ id }) => {
   })
 }
 
-export const createSet = ({ input }) => {
-  return db.set.create({
-    data: input,
+export const createSet = async ({ input }) => {
+  // console.log('input', input.flashCards)
+  const flashCards = input.flashCards // get cards ids
+
+  // get flashCards from DB
+  const flashCardsFromDB = await db.flashCard.findMany({
+    where: { id: { in: flashCards } },
   })
+
+  // remove flashCards from input
+  delete input.flashCards
+
+  // create set and connect flashcards to set
+  const set = await db.set.create({
+    data: {
+      ...input,
+      flashCards: {
+        connect: flashCardsFromDB.map((card) => ({ id: card.id })),
+      },
+    },
+  })
+
+  return set
 }
 
 export const updateSet = ({ id, input }) => {

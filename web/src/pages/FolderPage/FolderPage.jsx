@@ -49,20 +49,18 @@ const FolderPage = ({ folderId }) => {
             </Link>
           </Flex>
           <Space>
-            <ButtonWithIcon
+            <Button size="large" shape="circle" icon={<PlusOutlined />} />
+            <Button size="large" shape="circle" icon={<ShareAltOutlined />} />
+            <Button
               size="large"
               shape="circle"
-              icon={<PlusOutlined />}
-            />
-            <ButtonWithIcon
-              size="large"
-              shape="circle"
-              icon={<ShareAltOutlined />}
-            />
-            <ButtonWithIcon
-              size="large"
-              shape="circle"
-              icon={<MoreOutlined />}
+              icon={
+                <MoreOutlined
+                  style={{
+                    rotate: '90deg',
+                  }}
+                />
+              }
             />
           </Space>
         </Flex>
@@ -72,21 +70,3 @@ const FolderPage = ({ folderId }) => {
 }
 
 export default FolderPage
-
-const ButtonWithIcon = ({ icon, children, ...props }) => {
-  return (
-    <Button
-      {...props}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <Space>
-        {icon}
-        {children}
-      </Space>
-    </Button>
-  )
-}
