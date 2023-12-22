@@ -30,8 +30,8 @@ export const deleteFlashCard = ({ id }) => {
 }
 
 export const FlashCard = {
-  card: (_obj, { root }) => {
-    return db.flashCard.findUnique({ where: { id: root?.id } }).card()
+  word: (_obj, { root }) => {
+    return db.flashCard.findUnique({ where: { id: root?.id } }).word()
   },
   set: (_obj, { root }) => {
     return db.flashCard.findUnique({ where: { id: root?.id } }).set()

@@ -1,42 +1,41 @@
 export const schema = gql`
-  type Card {
+  type Meaning {
     id: Int!
-    translation: String!
     definition: String!
     example: String!
     cefrLevel: String!
     partOfSpeech: String!
+    translation: String!
     word: Word!
     wordId: Int!
-    flashCards: [FlashCard]!
   }
 
   type Query {
-    cards: [Card!]! @requireAuth
-    card(id: Int!): Card @requireAuth
+    meanings: [Meaning!]! @requireAuth
+    meaning(id: Int!): Meaning @requireAuth
   }
 
-  input CreateCardInput {
-    translation: String!
+  input CreateMeaningInput {
     definition: String!
     example: String!
     cefrLevel: String!
     partOfSpeech: String!
+    translation: String!
     wordId: Int!
   }
 
-  input UpdateCardInput {
-    translation: String
+  input UpdateMeaningInput {
     definition: String
     example: String
     cefrLevel: String
     partOfSpeech: String
+    translation: String
     wordId: Int
   }
 
   type Mutation {
-    createCard(input: CreateCardInput!): Card! @requireAuth
-    updateCard(id: Int!, input: UpdateCardInput!): Card! @requireAuth
-    deleteCard(id: Int!): Card! @requireAuth
+    createMeaning(input: CreateMeaningInput!): Meaning! @requireAuth
+    updateMeaning(id: Int!, input: UpdateMeaningInput!): Meaning! @requireAuth
+    deleteMeaning(id: Int!): Meaning! @requireAuth
   }
 `

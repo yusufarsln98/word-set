@@ -3,17 +3,27 @@ export const standard = defineScenario({
     one: {
       data: {
         term: 'String',
-        termSearch: 'String5397412',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
+        search: 'String7155765',
+        dictionary: {
+          create: {
+            name: 'String3148041',
+            termsLanguage: 'English',
+            translationsLanguage: 'English',
+          },
+        },
       },
     },
     two: {
       data: {
         term: 'String',
-        termSearch: 'String9840464',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
+        search: 'String361138',
+        dictionary: {
+          create: {
+            name: 'String8264453',
+            termsLanguage: 'English',
+            translationsLanguage: 'English',
+          },
+        },
       },
     },
   },

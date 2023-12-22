@@ -38,6 +38,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ant-design/cssinjs@npm:^1.16.1":
+  version: 1.18.1
+  resolution: "@ant-design/cssinjs@npm:1.18.1"
+  dependencies:
+    "@babel/runtime": ^7.11.1
+    "@emotion/hash": ^0.8.0
+    "@emotion/unitless": ^0.7.5
+    classnames: ^2.3.1
+    csstype: 3.1.2
+    rc-util: ^5.35.0
+    stylis: ^4.0.13
+  peerDependencies:
+    react: ">=16.0.0"
+    react-dom: ">=16.0.0"
+  checksum: 3e42536a5aa9c3c8f13d96102df886273a9d49a4ca1030f5c36f9d31c6a963111402b318656baab7aeef17560b3a65d3c2637b618c8fc783da5b28e431eca9f5
+  languageName: node
+  linkType: hard
+
 "@ant-design/cssinjs@npm:^1.17.5":
   version: 1.17.5
   resolution: "@ant-design/cssinjs@npm:1.17.5"
@@ -53,6 +71,24 @@ __metadata:
     react: ">=16.0.0"
     react-dom: ">=16.0.0"
   checksum: d83ef4778538da9e301830ae35ec973d8be5054e242875e8b8bfab416082f8445ca6f8e3bcf9f68e4160dc2d86a0f03f573e2c09777d4123eadad0e23e700384
+  languageName: node
+  linkType: hard
+
+"@ant-design/happy-work-theme@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@ant-design/happy-work-theme@npm:1.0.0"
+  dependencies:
+    "@ant-design/cssinjs": ^1.16.1
+    "@babel/runtime": ^7.18.3
+    "@ctrl/tinycolor": ^3.6.0
+    classnames: ^2.3.2
+    rc-motion: ^2.7.3
+    rc-util: ^5.33.0
+  peerDependencies:
+    antd: ">= 5.8.2"
+    react: ">=16.9.0"
+    react-dom: ">=16.9.0"
+  checksum: bddfc6d5b3326140080c2a65c57be461f0a2a091dd9579ffa3c66a41f3ea1fa507c53dc18d606f628c6abd994607600b1d3aca58bcfbe3fa0f2345a759fbd7b3
   languageName: node
   linkType: hard
 
@@ -11616,7 +11652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.10, csstype@npm:^3.0.2":
+"csstype@npm:3.1.2, csstype@npm:^3.0.10, csstype@npm:^3.0.2":
   version: 3.1.2
   resolution: "csstype@npm:3.1.2"
   checksum: 32c038af259897c807ac738d9eab16b3d86747c72b09d5c740978e06f067f9b7b1737e1b75e407c7ab1fe1543dc95f20e202b4786aeb1b8d3bdf5d5ce655e6c6
@@ -20349,7 +20385,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4, rc-motion@npm:^2.6.1, rc-motion@npm:^2.6.2, rc-motion@npm:^2.9.0":
+"rc-motion@npm:^2.0.0, rc-motion@npm:^2.0.1, rc-motion@npm:^2.3.0, rc-motion@npm:^2.3.4, rc-motion@npm:^2.4.3, rc-motion@npm:^2.4.4, rc-motion@npm:^2.6.1, rc-motion@npm:^2.6.2, rc-motion@npm:^2.7.3, rc-motion@npm:^2.9.0":
   version: 2.9.0
   resolution: "rc-motion@npm:2.9.0"
   dependencies:
@@ -20693,7 +20729,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rc-util@npm:^5.38.1":
+"rc-util@npm:^5.33.0, rc-util@npm:^5.38.1":
   version: 5.38.1
   resolution: "rc-util@npm:5.38.1"
   dependencies:
@@ -24466,6 +24502,7 @@ __metadata:
   resolution: "web@workspace:web"
   dependencies:
     "@ant-design/colors": ^7.0.0
+    "@ant-design/happy-work-theme": ^1.0.0
     "@redwoodjs/auth-dbauth-web": 6.4.0
     "@redwoodjs/forms": 6.4.0
     "@redwoodjs/router": 6.4.0

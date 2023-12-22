@@ -19,20 +19,18 @@ describe('words', () => {
     expect(result).toEqual(scenario.word.one)
   })
 
-  scenario('creates a word', async () => {
+  scenario('creates a word', async (scenario) => {
     const result = await createWord({
       input: {
         term: 'String',
-        termSearch: 'String168782',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
+        search: 'String6783997',
+        dictionaryId: scenario.word.two.dictionaryId,
       },
     })
 
     expect(result.term).toEqual('String')
-    expect(result.termSearch).toEqual('String168782')
-    expect(result.termsLanguage).toEqual('English')
-    expect(result.translationsLanguage).toEqual('English')
+    expect(result.search).toEqual('String6783997')
+    expect(result.dictionaryId).toEqual(scenario.word.two.dictionaryId)
   })
 
   scenario('updates a word', async (scenario) => {

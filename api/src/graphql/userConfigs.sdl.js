@@ -36,17 +36,6 @@ export const schema = gql`
     Japanese
   }
 
-  enum Language {
-    English
-    French
-    Turkish
-    Spanish
-    German
-    Italian
-    Portuguese
-    Japanese
-  }
-
   type Query {
     userConfigs: [UserConfig!]! @requireAuth
     userConfig(id: Int!): UserConfig @requireAuth

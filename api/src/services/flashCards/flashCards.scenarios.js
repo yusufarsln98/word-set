@@ -2,66 +2,58 @@ export const standard = defineScenario({
   flashCard: {
     one: {
       data: {
-        term: 'String',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
-        card: {
+        word: {
           create: {
-            translation: 'String',
-            definition: 'String',
-            example: 'String',
-            cefrLevel: 'String',
-            partOfSpeech: 'String',
-            word: {
-              create: {
-                term: 'String',
-                termSearch: 'String7089980',
-                termsLanguage: 'English',
-                translationsLanguage: 'English',
-              },
-            },
+            term: 'String',
+            dictionary: { create: { dictionary: 'String2506971' } },
           },
         },
         set: {
           create: {
             title: 'String',
             description: 'String',
-            creatorId: 6612581,
+            updatedAt: '2023-12-21T18:20:15.154Z',
             termsLanguage: 'English',
             translationsLanguage: 'English',
+            user: {
+              create: {
+                name: 'String',
+                username: 'String3285436',
+                email: 'String7583235',
+                hashedPassword: 'String',
+                salt: 'String',
+                daysStudied: '2023-12-21T18:20:15.154Z',
+              },
+            },
           },
         },
       },
     },
     two: {
       data: {
-        term: 'String',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
-        card: {
+        word: {
           create: {
-            translation: 'String',
-            definition: 'String',
-            example: 'String',
-            cefrLevel: 'String',
-            partOfSpeech: 'String',
-            word: {
-              create: {
-                term: 'String',
-                termSearch: 'String5831096',
-                termsLanguage: 'English',
-                translationsLanguage: 'English',
-              },
-            },
+            term: 'String',
+            dictionary: { create: { dictionary: 'String3194245' } },
           },
         },
         set: {
           create: {
             title: 'String',
             description: 'String',
-            creatorId: 7950688,
+            updatedAt: '2023-12-21T18:20:15.154Z',
             termsLanguage: 'English',
             translationsLanguage: 'English',
+            user: {
+              create: {
+                name: 'String',
+                username: 'String661411',
+                email: 'String5204889',
+                hashedPassword: 'String',
+                salt: 'String',
+                daysStudied: '2023-12-21T18:20:15.154Z',
+              },
+            },
           },
         },
       },

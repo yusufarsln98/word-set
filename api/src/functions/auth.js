@@ -115,6 +115,8 @@ export const handler = async (event, context) => {
           salt: salt,
           name: username,
           username: username,
+          // if username is admin@admin.com, set role as admin. Delete this later!
+          roles: username === 'admin@admin.com' ? ['ADMIN'] : ['USER'],
           userConfig: {
             create: {
               theme: 'LIGHT',

@@ -1,35 +1,31 @@
 export const standard = defineScenario({
-  card: {
+  meaning: {
     one: {
       data: {
-        translation: 'String',
         definition: 'String',
         example: 'String',
         cefrLevel: 'String',
         partOfSpeech: 'String',
+        translation: 'String',
         word: {
           create: {
             term: 'String',
-            termSearch: 'String1816005',
-            termsLanguage: 'English',
-            translationsLanguage: 'English',
+            dictionary: { create: { dictionary: 'String6680753' } },
           },
         },
       },
     },
     two: {
       data: {
-        translation: 'String',
         definition: 'String',
         example: 'String',
         cefrLevel: 'String',
         partOfSpeech: 'String',
+        translation: 'String',
         word: {
           create: {
             term: 'String',
-            termSearch: 'String5854972',
-            termsLanguage: 'English',
-            translationsLanguage: 'English',
+            dictionary: { create: { dictionary: 'String6002835' } },
           },
         },
       },

@@ -2,51 +2,27 @@ export const schema = gql`
   type Word {
     id: Int!
     term: String!
-    termSearch: String!
-    termsLanguage: Language!
-    translationsLanguage: Language!
-    cards: [Card]!
-  }
-
-  enum Language {
-    English
-    French
-    Turkish
-    Spanish
-    German
-    Italian
-    Portuguese
-    Japanese
-  }
-
-  enum Language {
-    English
-    French
-    Turkish
-    Spanish
-    German
-    Italian
-    Portuguese
-    Japanese
+    search: String!
+    dictionary: Dictionary!
+    dictionaryId: Int!
+    meanings: [Meaning]!
+    flashCards: [FlashCard]!
   }
 
   type Query {
     words: [Word!]! @requireAuth
     word(id: Int!): Word @requireAuth
+    wordBySearch(search: String!): Word @requireAuth
   }
 
   input CreateWordInput {
     term: String!
-    termSearch: String!
-    termsLanguage: Language!
-    translationsLanguage: Language!
+    dictionaryId: Int!
   }
 
   input UpdateWordInput {
     term: String
-    termSearch: String
-    termsLanguage: Language
-    translationsLanguage: Language
+    dictionaryId: Int
   }
 
   type Mutation {

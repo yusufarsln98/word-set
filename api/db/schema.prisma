@@ -119,11 +119,9 @@ model Set {
 model FlashCard {
   id                  Int         @id @default(autoincrement())
 
-  term                String
-
-  // each flashcard has a Card object and boost value
-  card                Card        @relation(fields: [cardId], references: [id])
-  cardId              Int
+  word                Word         @relation(fields: [wordId], references: [id])
+  wordId              Int
+  meaningIndex        Int          @default(0)
 
   boost               Float       @default(1)
 
@@ -131,35 +129,37 @@ model FlashCard {
   setId               Int
 }
 
+
+model Dictionary {
+  id                   Int         @id @default(autoincrement())
+  name                 String      @unique // combination of termsLanguage and translationsLanguage (e.g. "English-Turkish")
+  termsLanguage        Language
+  translationsLanguage Language
+  words                Word[]
+}
+
 //  -------- Word --------
 //  User can search a word by specifying the term and translation language
 model Word {
   id                    Int         @id @default(autoincrement())
-  term                  String      // all lowercased
-  // Term search is an unique field to find the word in constant time
-  // It is combination of term and termsLanguage and translationsLanguage
-  // For example, if term is "hello", termsLanguage is EN, and translationsLanguage is TR
-  // termSearch will be "hello-EN-TR"
-  termSearch            String      @unique
-
-  termsLanguage         Language
-  translationsLanguage  Language
-
-  cards                 Card[]
+  term                  String
+  search                String      @unique // combination of term and dictionary name (e.g. "hello-English-Turkish")
+  dictionary            Dictionary  @relation(fields: [dictionaryId], references: [id])
+  dictionaryId          Int
+  meanings              Meaning[]
+  flashCards            FlashCard[]
 }
 
-model Card {
+model Meaning {
   id                  Int         @id @default(autoincrement())
 
-  translation         String
   definition          String
   example             String
   cefrLevel           String
   partOfSpeech        String
+  translation         String
 
   word                Word        @relation(fields: [wordId], references: [id])
   wordId              Int
-
-  flashCards          FlashCard[]
-
 }
+

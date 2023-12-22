@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
+    "@ant-design/happy-work-theme": "^1.0.0",
     "@redwoodjs/auth-dbauth-web": "6.4.0",
     "@redwoodjs/forms": "6.4.0",
     "@redwoodjs/router": "6.4.0",

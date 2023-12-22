@@ -28,18 +28,12 @@ describe('flashCards', () => {
   scenario('creates a flashCard', async (scenario) => {
     const result = await createFlashCard({
       input: {
-        term: 'String',
-        termsLanguage: 'English',
-        translationsLanguage: 'English',
-        cardId: scenario.flashCard.two.cardId,
+        wordId: scenario.flashCard.two.wordId,
         setId: scenario.flashCard.two.setId,
       },
     })
 
-    expect(result.term).toEqual('String')
-    expect(result.termsLanguage).toEqual('English')
-    expect(result.translationsLanguage).toEqual('English')
-    expect(result.cardId).toEqual(scenario.flashCard.two.cardId)
+    expect(result.wordId).toEqual(scenario.flashCard.two.wordId)
     expect(result.setId).toEqual(scenario.flashCard.two.setId)
   })
 
@@ -49,10 +43,10 @@ describe('flashCards', () => {
     })
     const result = await updateFlashCard({
       id: original.id,
-      input: { term: 'String2' },
+      input: { wordId: scenario.flashCard.two.wordId },
     })
 
-    expect(result.term).toEqual('String2')
+    expect(result.wordId).toEqual(scenario.flashCard.two.wordId)
   })
 
   scenario('deletes a flashCard', async (scenario) => {
