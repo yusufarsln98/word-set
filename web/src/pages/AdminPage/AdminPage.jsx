@@ -1,21 +1,18 @@
-import { Link, routes } from '@redwoodjs/router'
+import { useEffect } from 'react'
+
+import { navigate, routes } from '@redwoodjs/router'
 import { MetaTags } from '@redwoodjs/web'
 
 const AdminPage = () => {
+  useEffect(() => {
+    // go to dictionaries page
+    navigate(routes.dictionaries())
+  }, [])
+
   return (
     <>
-      <MetaTags title="Admin" description="Admin page" />
-
-      <h1>AdminPage</h1>
-      <p>
-        Find me in <code>./web/src/pages/AdminPage/AdminPage.jsx</code>
-      </p>
-      <p>
-        My default route is named <code>admin</code>, link to me with `
-        <Link to={routes.admin()}>Admin</Link>`
-      </p>
+      <MetaTags title="Admin" />
     </>
   )
 }
-
 export default AdminPage
