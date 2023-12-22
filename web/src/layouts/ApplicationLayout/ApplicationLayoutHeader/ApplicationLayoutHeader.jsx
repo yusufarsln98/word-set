@@ -90,7 +90,7 @@ const ApplicationLayoutHeader = () => {
       key: '1',
       label: (
         <>
-          <Link to={routes.latest()}>Latest</Link>
+          <Link to={routes.latest()}>Home</Link>
         </>
       ),
     },
@@ -352,7 +352,6 @@ const ApplicationLayoutHeader = () => {
           background: colorBgContainer,
           userSelect: 'none',
           borderBottom: `1px solid ${colorBorder}`,
-          boxShadow: boxShadowTertiary,
         }}
       >
         <Flex justify="space-between" align="center">

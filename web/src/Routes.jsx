@@ -18,6 +18,7 @@ import {
 import LoginAndSignupPageLayout from 'src/layouts/LoginAndSignupPageLayout/LoginAndSignupPageLayout'
 
 import { useAuth } from './auth'
+import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import ApplicationLayout from './layouts/ApplicationLayout/ApplicationLayout'
 import ProfileLayout from './layouts/ProfileLayout/ProfileLayout'
 import SetAndFolderLayout from './layouts/SetAndFolderLayout/SetAndFolderLayout'
@@ -47,8 +48,10 @@ const Routes = () => {
           <Route path="/user/{userId:Int}/settings" page={SettingsPage} name="settings" />
         </PrivateSet>
       </PrivateSet>
-      <PrivateSet unauthenticated="home" roles="ADMIN">
+      <PrivateSet unauthenticated="home" roles="ADMIN" wrap={AdminLayout}>
         <Route path="/admin" page={AdminPage} name="admin" />
+        <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
+        <Route path="/admin/dictionaries/{dictionaryId:Int}/words" page={WordsPage} name="words" />
       </PrivateSet>
       <Route path="/" page={HomePage} name="home" />
       <Route notfound page={NotFoundPage} />

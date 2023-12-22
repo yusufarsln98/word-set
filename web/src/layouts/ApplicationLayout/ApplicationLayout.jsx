@@ -26,7 +26,7 @@ const ApplicationLayout = ({ children }) => {
 
   return (
     <>
-      <Layout className="layout" hashPriority="high">
+      <Layout className="layout">
         <ApplicationLayoutHeader />
         <Content
           style={{
