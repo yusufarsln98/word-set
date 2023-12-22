@@ -2,6 +2,8 @@ import { gray } from '@ant-design/colors'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { Button, Card, Empty, Flex, Image, Skeleton, Space, Tag } from 'antd'
 
+import { Link, routes } from '@redwoodjs/router'
+
 import styles from 'src/Global.module.scss'
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
 
@@ -90,59 +92,70 @@ const TheCard = ({ instance, quantity }) => {
 
   return (
     <>
-      <Card className={styles.hoverable}>
-        <Flex
-          vertical
-          align="start"
-          justify="space-between"
-          style={{
-            width: 400,
-            height: 120,
-          }}
-        >
-          <Card.Meta
-            title={<div style={{ color: gray[6] }}>{instance.title}</div>}
-            description={
-              <p
-                style={{
-                  wordBreak: 'break-word',
-                }}
-                title={instance.description}
-              >
-                {instance.description}
-              </p>
-            }
-          />
+      <Link
+        // if instance type in is Set, then link to set page
+        // if instance type is Folder, then link to folder page
+
+        to={
+          instance.__typename === 'Set'
+            ? routes.set({ setId: instance.id })
+            : routes.folder({ folderId: instance.id })
+        }
+      >
+        <Card className={styles.hoverable}>
           <Flex
-            align="center"
+            vertical
+            align="start"
             justify="space-between"
             style={{
-              width: '100%',
+              width: 400,
+              height: 120,
             }}
           >
-            <Space>
-              <Image
-                src={AVATAR_URL[userConfig?.defaultAvatarIndex]} // TODO: remove
-                width={24}
-                height={24}
-                alt="avatar"
-                preview={false}
-              />
-              <p
-                style={{
-                  color: gray[6],
-                  fontSize: 12,
-                }}
-              >
-                {user?.username}
-              </p>
-            </Space>
-            <Tag color="geekblue">
-              {quantity[0]} {quantity[1]}
-            </Tag>
+            <Card.Meta
+              title={<div style={{ color: gray[6] }}>{instance.title}</div>}
+              description={
+                <p
+                  style={{
+                    wordBreak: 'break-word',
+                  }}
+                  title={instance.description}
+                >
+                  {instance.description}
+                </p>
+              }
+            />
+            <Flex
+              align="center"
+              justify="space-between"
+              style={{
+                width: '100%',
+              }}
+            >
+              <Space>
+                <Image
+                  src={AVATAR_URL[userConfig?.defaultAvatarIndex]} // TODO: remove
+                  width={24}
+                  height={24}
+                  alt="avatar"
+                  preview={false}
+                />
+                <p
+                  style={{
+                    color: gray[6],
+                    fontSize: 12,
+                  }}
+                >
+                  {user?.username}
+                </p>
+              </Space>
+              <Tag color="geekblue">
+                {quantity[0]} {quantity[1]}
+              </Tag>
+            </Flex>
           </Flex>
-        </Flex>
-      </Card>
+        </Card>
+      </Link>
     </>
   )
 }
