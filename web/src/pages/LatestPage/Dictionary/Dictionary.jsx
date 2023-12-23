@@ -1,3 +1,5 @@
+// DB'ye bakilacak, kelime varsa, kelimeyi getir, yoksa, kelimeyi olustur.
+
 import { useEffect, useRef, useState } from 'react'
 
 import { blue, gray, red } from '@ant-design/colors'
@@ -7,13 +9,46 @@ import {
   ReloadOutlined,
   SoundFilled,
 } from '@ant-design/icons'
-import { Button, Flex, Form, Input, Tag, message, theme } from 'antd'
+import {
+  Button,
+  Flex,
+  Form,
+  Input,
+  Select,
+  Space,
+  Tag,
+  message,
+  theme,
+} from 'antd'
+import { useForm } from 'antd/es/form/Form'
 import Paragraph from 'antd/es/typography/Paragraph'
 import Title from 'antd/es/typography/Title'
 
 // import { Link, routes } from '@redwoodjs/router'
 
-import { capitalizeFirstLetter } from 'src/utility'
+import { useQuery, useMutation } from '@redwoodjs/web'
+
+import { capitalizeAll, capitalizeFirstLetter } from 'src/utility'
+
+// const modes = ['word', 'proverb', 'idiom', 'phrase']
+const modes = [
+  {
+    label: 'Word',
+    value: 'word',
+  },
+  {
+    label: 'Proverb',
+    value: 'proverb',
+  },
+  {
+    label: 'Idiom',
+    value: 'idiom',
+  },
+  {
+    label: 'Phrase',
+    value: 'phrase',
+  },
+]
 
 /*
   Values of the searchResult object:
@@ -40,72 +75,45 @@ const Dictionary = function ({ languageNative, languageLearning }) {
   })
   const [wordObject, setWordObject] = useState(null)
   const [searchText, setSearchText] = useState('')
+  const [mode, setMode] = useState(modes[0].value)
   const searchButtonRef = useRef(null) // Trigger search with 'Enter' key
   const inputRef = useRef(null) // Focus on input when page loads
   const [loading, setLoading] = useState(false)
 
-  const getSearchResult = () => {
-    setLoading(true)
-    fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.REDWOOD_ENV_OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        // messages: [{ role: 'user', content: getPrompt(searchText) }],
-        // prompt: getPrompt(searchText),
-        messages: [
-          {
-            role: 'system',
-            content: getSystemMessage(searchText, [
-              languageLearning,
-              languageNative,
-            ]),
-          },
-          {
-            role: 'user',
-            content: getUserMessage(searchText),
-          },
-        ],
-        temperature: 0,
-        max_tokens: 240,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('data', JSON.parse(data.choices[0].message.content))
-        setSearchResult(JSON.parse(data.choices[0].message.content))
-        setLoading(false)
-      })
-      .catch((error) => {
-        message.error(error.message)
-        setLoading(false)
-      })
+  const searchWithGPT = getSearchResultWithGPT(
+    setLoading,
+    searchText,
+    mode,
+    languageLearning,
+    languageNative,
+    setSearchResult
+  )
+
+  const onClickSearch = async () => {
+    searchWithGPT()
   }
 
   useEffect(() => {
     // since the searchResult can be any 2 language, we should extract values
     // and set the wordObject as a more representetive object
     if (searchResult) {
-      const values = Object.values(searchResult)
-      // if searchResult is an error
-      if (values.length === 2) {
+      console.log('searchResult', searchResult)
+      const values = Object.values(searchResult) // get values of the object, since the key can be changed
+      if (searchResult.error) {
         const wordObject = {
-          word: values[0],
-          error: values[1],
+          word: values[0].toLowerCase(),
+          error: searchResult.error.toLowerCase(),
         }
         setWordObject(wordObject)
         return
       }
       const wordObject = {
         word: values[0].toLowerCase(),
-        definition: values[1].toLowerCase(),
-        cefrLevel: values[2].toUpperCase(),
-        partOfSpeech: values[3].toUpperCase(),
-        example: capitalizeFirstLetter(values[4]),
-        translation: values[5].toLowerCase(),
+        definition: searchResult.definition.toLowerCase(),
+        cefrLevel: searchResult.cefrLevel.toUpperCase(),
+        partOfSpeech: searchResult.partOfSpeech.toUpperCase(),
+        example: capitalizeFirstLetter(searchResult.example),
+        translation: searchResult.translation.toLowerCase(),
       }
       setWordObject(wordObject)
     }
@@ -118,32 +126,51 @@ const Dictionary = function ({ languageNative, languageLearning }) {
   return (
     <>
       <Flex align="center" justify="start">
-        <Form.Item style={{ marginTop: 20, width: 576 }}>
-          <Input
-            placeholder={`Search a ${languageLearning} word...`}
-            size="large"
-            allowClear
-            ref={inputRef}
-            suffix={
-              <Button
-                ref={searchButtonRef}
-                disabled={
-                  searchText.length === 0 ||
-                  searchText.toLowerCase() === wordObject?.word.toLowerCase()
+        <Form>
+          <Space.Compact style={{ marginTop: 20 }}>
+            <Form.Item style={{ width: 576 }} name="searchText">
+              <Input
+                placeholder={`Search a ${languageLearning} word...`}
+                size="large"
+                allowClear
+                ref={inputRef}
+                suffix={
+                  <Button
+                    ref={searchButtonRef}
+                    disabled={
+                      searchText.length === 0 ||
+                      searchText.toLowerCase() ===
+                        wordObject?.word.toLowerCase() ||
+                      searchText.toLowerCase().trim() ===
+                        wordObject?.word.toLowerCase()
+                    }
+                    loading={loading}
+                    icon={<SearchOutlined style={{ fontSize: 16 }} />}
+                    onClick={() => {
+                      onClickSearch()
+                    }}
+                    type="text"
+                    htmlType="submit"
+                    size="small"
+                  />
                 }
-                loading={loading}
-                icon={<SearchOutlined />}
-                onClick={() => {
-                  getSearchResult()
-                }}
-                htmlType="submit"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onPressEnter={() => searchButtonRef.current.click()}
               />
-            }
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            onPressEnter={() => searchButtonRef.current.click()}
-          />
-        </Form.Item>
+            </Form.Item>
+            <Form.Item name="mode" style={{ width: 160 }}>
+              <Select
+                defaultValue="word"
+                size="large"
+                onChange={(value) => {
+                  setMode(value)
+                }}
+                options={modes}
+              ></Select>
+            </Form.Item>
+          </Space.Compact>
+        </Form>
       </Flex>
       <Flex
         style={{
@@ -274,26 +301,77 @@ const Dictionary = function ({ languageNative, languageLearning }) {
 
 export default Dictionary
 
-const getSystemMessage = (searchText, languages) => {
+const getSystemMessage = (mode, [languageLearning, languageNative]) => {
   return `
-  You are an advanced ${languages[0]}-${languages[1]} dictionary that takes a searchText (no case sensitive!) and returns a JSON object.
-  If '${searchText}' is not a ${languages[0]} word, return the object below:
+  You function as a dictionary, provided a/an ${mode} and returning either a 'definition object' or an 'error object'.
+
+  Your task is to determine whether the provided ${mode} is belong to the ${languageLearning} or not.
+
+  If you determine the provided ${mode} belong to the ${languageLearning}, return the 'definition object', otherwise, return the 'error object'.
+  Both objects are described below.
+
+  definition object
   {
-    "word": "${searchText}"
-    "error": "No definition found."
-  }
-  If '${searchText}' is a ${languages[0]} word, fill in the '?' areas in the object and return it:
-  {
-    "word": "${searchText}",
-    "definition": ?, (note: "definition" is the definition of the ${searchText} in ${languages[0]}.)
+    "${mode}": ?, [${capitalizeAll(mode)} IN ${languageLearning}]
+    "definition": ?, [DEFINITION IN ${languageLearning}]
     "cefrLevel": ?,
     "partOfSpeech": ?,
-    "example": ?, (note: "example" is a sentence in ${languages[0]} that contains the word.)
-    "translation": ? (note: "translation" is the translation of the ${searchText} in ${languages[1]} and it can be one or more words.)
+    "example": ?, [EXAMPLE IN ${languageLearning}]
+    "translation": ? [TRANSLATION IN ${languageNative} IN ONE OR A FEW WORDS]
   }
-  `
+
+  error object
+  {
+    "${mode}": ?, ${mode} that you are searching for
+    "error": "No definition found."
+  }`
 }
 
-const getUserMessage = (searchText) => {
-  return `searchText: '${searchText}'`
+const getUserMessage = (mode, searchText) => {
+  return `${mode}: ${searchText}`
+}
+
+const getSearchResultWithGPT = (
+  setLoading,
+  searchText,
+  mode, // word, proverb, idiom, phrase
+  languageLearning,
+  languageNative,
+  setSearchResult
+) => {
+  return () => {
+    setLoading(true)
+    fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.REDWOOD_ENV_OPENAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: getSystemMessage(mode, [languageLearning, languageNative]),
+          },
+          {
+            role: 'user',
+            content: getUserMessage(mode, searchText),
+          },
+        ],
+        temperature: 0,
+        max_tokens: 240,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('data', JSON.parse(data.choices[0].message.content))
+        setSearchResult(JSON.parse(data.choices[0].message.content))
+        setLoading(false)
+      })
+      .catch((error) => {
+        message.error(error.message)
+        setLoading(false)
+      })
+  }
 }
