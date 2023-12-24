@@ -6,7 +6,7 @@ import { MetaTags, useQuery } from '@redwoodjs/web'
 
 // import folder icon
 import styles from 'src/Global.module.scss'
-import { USER_QUERY_FOLDERS } from 'src/graphql'
+import { USER_QUERY_FOLDERS } from 'src/graphql_queries'
 
 const FoldersPage = ({ userId }) => {
   const { data, loading, error } = useQuery(USER_QUERY_FOLDERS, {

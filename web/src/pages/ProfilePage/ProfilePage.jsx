@@ -7,7 +7,7 @@ import Card from 'antd/es/card/Card'
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
-import { USER_QUERY_ACTIVITY } from 'src/graphql'
+import { USER_QUERY_ACTIVITY } from 'src/graphql_queries'
 
 const ProfilePage = ({ userId }) => {
   const {

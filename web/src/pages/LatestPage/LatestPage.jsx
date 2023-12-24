@@ -5,7 +5,7 @@ import Title from 'antd/es/typography/Title'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import { USER_QUERY_FOLDERS, USER_QUERY_SETS } from 'src/graphql'
+import { USER_QUERY_FOLDERS, USER_QUERY_SETS } from 'src/graphql_queries'
 
 const { Content } = Layout
 

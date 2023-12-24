@@ -39,7 +39,7 @@ import {
 import { useMutation } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import { CREATE_FOLDER_MUTATION } from 'src/graphql'
+import { CREATE_FOLDER_MUTATION } from 'src/graphql_queries'
 
 const { Header } = Layout
 
@@ -182,12 +182,12 @@ const ApplicationLayoutHeader = () => {
             style={{ width: '100%', cursor: 'default' }}
           >
             <Avatar
-              src={AVATAR_URL[currentUser.userConfig.defaultAvatarIndex ?? 0]}
+              src={AVATAR_URL[currentUser?.userConfig.defaultAvatarIndex ?? 0]}
               draggable={false}
               size="large"
             />
             <Flex vertical gap={0}>
-              <Paragraph style={{ margin: 0 }}>{currentUser.name}</Paragraph>
+              <Paragraph style={{ margin: 0 }}>{currentUser?.name}</Paragraph>
             </Flex>
           </Flex>
         </>
@@ -200,7 +200,7 @@ const ApplicationLayoutHeader = () => {
       key: '2',
       label: (
         <>
-          <Link to={routes.profile({ userId: currentUser.id })}>
+          <Link to={routes.profile({ userId: currentUser?.id })}>
             <Flex align="center" justify="start" gap={16}>
               <UserOutlined />
               <Paragraph
@@ -220,7 +220,7 @@ const ApplicationLayoutHeader = () => {
       key: '3',
       label: (
         <>
-          <Link to={routes.settings({ userId: currentUser.id })}>
+          <Link to={routes.settings({ userId: currentUser?.id })}>
             <Flex align="center" justify="start" gap={16}>
               <SettingOutlined />
               <Paragraph
@@ -332,7 +332,7 @@ const ApplicationLayoutHeader = () => {
       variables: {
         title: values.folderName,
         description: values.description,
-        userId: currentUser.id,
+        userId: currentUser?.id,
       },
     })
       .then((res) => {
@@ -419,7 +419,9 @@ const ApplicationLayoutHeader = () => {
                 icon={
                   <Avatar
                     src={
-                      AVATAR_URL[currentUser.userConfig.defaultAvatarIndex ?? 0]
+                      AVATAR_URL[
+                        currentUser?.userConfig.defaultAvatarIndex ?? 0
+                      ]
                     }
                     draggable={false}
                     size="large"

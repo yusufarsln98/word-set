@@ -68,8 +68,6 @@ const ProfileLayout = ({ children }) => {
   ]
   const currentTab = useLocation().pathname.split('/')[3] || 'recent-activities'
 
-  console.log('currentTab', currentTab)
-
   return (
     <>
       <Flex

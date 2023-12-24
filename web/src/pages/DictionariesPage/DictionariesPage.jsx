@@ -8,7 +8,10 @@ import { Button, Flex, Input, Table, message } from 'antd'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 
-import { CREATE_DICTIONARY_MUTATION, QUERY_DICTIONARIES } from 'src/graphql'
+import {
+  CREATE_DICTIONARY_MUTATION,
+  QUERY_DICTIONARIES,
+} from 'src/graphql_queries'
 
 import styles from '../../Global.module.scss'
 

@@ -5,7 +5,7 @@ import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import styles from 'src/Global.module.scss'
-import { USER_QUERY_SETS } from 'src/graphql'
+import { USER_QUERY_SETS } from 'src/graphql_queries'
 
 import { HorizontalCardSkeleton } from '../FoldersPage/FoldersPage'
 
@@ -13,7 +13,6 @@ const SetsPage = ({ userId }) => {
   const { data, loading, error } = useQuery(USER_QUERY_SETS, {
     variables: { userId },
   })
-  console.log('user data', data?.user?.sets)
   return (
     <>
       <MetaTags title="Sets" description="Sets page" />

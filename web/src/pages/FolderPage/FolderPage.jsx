@@ -6,7 +6,7 @@ import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import { FOLDER_QUERY } from 'src/graphql'
+import { FOLDER_QUERY } from 'src/graphql_queries'
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
 
 const FolderPage = ({ folderId }) => {
