@@ -50,6 +50,7 @@ const Routes = () => {
       </PrivateSet>
       <PrivateSet unauthenticated="home" roles="ADMIN" wrap={AdminLayout}>
         <Route path="/admin" page={AdminPage} name="admin" />
+        {/* Uygulamayi sifirdan calistirirken, sozlukler sayfasini acik yapmaliyiz. */}
         <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
         <Route path="/admin/dictionaries/{dictionaryId:Int}/words" page={WordsPage} name="words" />
       </PrivateSet>
