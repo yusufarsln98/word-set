@@ -324,10 +324,15 @@ const ApplicationLayoutHeader = () => {
   ]
 
   // get create folder mutation
-  const [createFolder, { _loading }] = useMutation(CREATE_FOLDER_MUTATION) // loading can be used for other scenarios, but not for this one
-
+  const [createFolder, { createLoading }] = useMutation(CREATE_FOLDER_MUTATION) // loading can be used for other scenarios, but not for this one
   const onFinishCreateFolder = (values) => {
     console.log('Success:', values)
+    // check if values are valid
+    if (!values.folderName || !values.description) {
+      message.error('Please enter a name and a description!')
+      return
+    }
+
     createFolder({
       variables: {
         title: values.folderName,
@@ -337,13 +342,12 @@ const ApplicationLayoutHeader = () => {
     })
       .then((res) => {
         console.log(res)
+        setOpenModal(false)
       })
       .catch((err) => {
         console.log(err)
       })
-      .finally(() => {
-        setOpenModal(false)
-      })
+      .finally(() => {})
   }
   return (
     <>
@@ -440,6 +444,7 @@ const ApplicationLayoutHeader = () => {
         // onOk={() => {
         //   setOpenModal(false)
         // }}
+
         onCancel={() => {
           setOpenModal(false)
         }}
@@ -451,6 +456,7 @@ const ApplicationLayoutHeader = () => {
           onFinish={(values) => {
             onFinishCreateFolder(values)
           }}
+          autoComplete="off"
         >
           <Form.Item
             label="Folder Name"
@@ -503,7 +509,7 @@ const ApplicationLayoutHeader = () => {
             gap={8}
             style={{ marginTop: '16px' }}
           >
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={createLoading}>
               Create
             </Button>
             <Button
