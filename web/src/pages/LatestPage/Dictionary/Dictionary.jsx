@@ -20,7 +20,6 @@ import {
   message,
   theme,
 } from 'antd'
-import { useForm } from 'antd/es/form/Form'
 import Paragraph from 'antd/es/typography/Paragraph'
 import Title from 'antd/es/typography/Title'
 
@@ -28,9 +27,10 @@ import Title from 'antd/es/typography/Title'
 
 import { useQuery, useMutation } from '@redwoodjs/web'
 
+import { useAuth } from 'src/auth'
+import { CREATE_WORD_MUTATION, QUERY_WORD_BY_SEARCH } from 'src/graphql_queries'
 import { capitalizeAll, capitalizeFirstLetter } from 'src/utility'
 
-// const modes = ['word', 'proverb', 'idiom', 'phrase']
 const modes = [
   {
     label: 'Word',
@@ -64,24 +64,43 @@ const Dictionary = function ({ languageNative, languageLearning }) {
     token: { colorBgLayout, boxShadowTertiary, borderRadius },
   } = theme.useToken()
 
-  const [searchResult, setSearchResult] = useState({
-    word: 'WordSet',
+  const { currentUser } = useAuth()
+
+  const [wordObject, setWordObject] = useState({
+    word: 'wordset',
     definition:
       'A super cool dictionary, flashcard and a new fashion language learning tool.',
     cefrLevel: 'C2',
     partOfSpeech: 'NOUN',
     example: 'Me and my friends are using WordSet to learn Western Punjabi.',
-    translation: 'WordSet',
+    translation: 'wordset',
   })
-  const [wordObject, setWordObject] = useState(null)
+  const [searchResult, setSearchResult] = useState() // state for gpt search result
   const [searchText, setSearchText] = useState('')
+  const [queryText, setQueryText] = useState('') // state for triggering query
   const [mode, setMode] = useState(modes[0].value)
   const searchButtonRef = useRef(null) // Trigger search with 'Enter' key
-  const inputRef = useRef(null) // Focus on input when page loads
-  const [loading, setLoading] = useState(false)
+  const [gptSearchLoading, setGptSearchLoading] = useState(false)
+  const [createWord] = useMutation(CREATE_WORD_MUTATION, {
+    onCompleted: (data) => {
+      console.log('data', data)
+    },
+    onError: (error) => {
+      console.error('error', error)
+    },
+  })
+  const {
+    data: queryData,
+    error: queryError,
+    loading: queryLoading,
+  } = useQuery(QUERY_WORD_BY_SEARCH, {
+    variables: {
+      search: `${queryText}-${currentUser.dictionary.name}`,
+    },
+  })
 
   const searchWithGPT = getSearchResultWithGPT(
-    setLoading,
+    setGptSearchLoading,
     searchText,
     mode,
     languageLearning,
@@ -89,39 +108,57 @@ const Dictionary = function ({ languageNative, languageLearning }) {
     setSearchResult
   )
 
-  const onClickSearch = async () => {
-    searchWithGPT()
+  // to trigger DB query
+  const onClickSearch = () => {
+    setQueryText(searchText.trim())
   }
 
+  // After triggering DB query,
+  // first check if the word is in the DB, if not, search with GPT
   useEffect(() => {
-    // since the searchResult can be any 2 language, we should extract values
-    // and set the wordObject as a more representetive object
-    if (searchResult) {
-      console.log('searchResult', searchResult)
-      const values = Object.values(searchResult) // get values of the object, since the key can be changed
-      if (searchResult.error) {
+    if (queryText && queryText.length > 0 && queryText !== wordObject?.word) {
+      if (queryData && queryData.wordBySearch) {
         const wordObject = {
-          word: values[0].toLowerCase(),
-          error: searchResult.error.toLowerCase(),
+          word: queryData.wordBySearch.term,
+          definition: queryData.wordBySearch.meanings[0].definition,
+          cefrLevel: queryData.wordBySearch.meanings[0].cefrLevel,
+          partOfSpeech: queryData.wordBySearch.meanings[0].partOfSpeech,
+          example: queryData.wordBySearch.meanings[0].example,
+          translation: queryData.wordBySearch.meanings[0].translation,
         }
         setWordObject(wordObject)
+      } else if (queryData && queryData.wordBySearch === null) {
+        searchWithGPT()
+      }
+    }
+  }, [queryData, queryText])
+
+  // After GPT search, if the word is not in the DB, create it
+  useEffect(() => {
+    if (searchResult) {
+      // since the searchResult can be any 2 language, we should extract values
+      // and set the wordObject as a more representetive object
+      if (searchResult.error) {
+        setWordObject(searchResult)
         return
       }
-      const wordObject = {
-        word: values[0].toLowerCase(),
-        definition: searchResult.definition.toLowerCase(),
-        cefrLevel: searchResult.cefrLevel.toUpperCase(),
-        partOfSpeech: searchResult.partOfSpeech.toUpperCase(),
-        example: capitalizeFirstLetter(searchResult.example),
-        translation: searchResult.translation.toLowerCase(),
-      }
-      setWordObject(wordObject)
+      setWordObject({
+        ...searchResult,
+        partOfSpeech: searchResult.partOfSpeech,
+      })
+      createWord({
+        variables: {
+          term: searchResult.word,
+          dictionaryId: currentUser.dictionaryId,
+          definition: searchResult.definition,
+          example: searchResult.example,
+          cefrLevel: searchResult.cefrLevel,
+          partOfSpeech: searchResult.partOfSpeech,
+          translation: searchResult.translation,
+        },
+      })
     }
   }, [searchResult])
-
-  useEffect(() => {
-    inputRef.current.focus()
-  }, [])
 
   return (
     <>
@@ -133,7 +170,6 @@ const Dictionary = function ({ languageNative, languageLearning }) {
                 placeholder={`Search a ${languageLearning} word...`}
                 size="large"
                 allowClear
-                ref={inputRef}
                 suffix={
                   <Button
                     ref={searchButtonRef}
@@ -142,9 +178,11 @@ const Dictionary = function ({ languageNative, languageLearning }) {
                       searchText.toLowerCase() ===
                         wordObject?.word.toLowerCase() ||
                       searchText.toLowerCase().trim() ===
-                        wordObject?.word.toLowerCase()
+                        wordObject?.word.toLowerCase() ||
+                      gptSearchLoading ||
+                      queryLoading
                     }
-                    loading={loading}
+                    loading={gptSearchLoading || queryLoading}
                     icon={<SearchOutlined style={{ fontSize: 16 }} />}
                     onClick={() => {
                       onClickSearch()
@@ -154,20 +192,23 @@ const Dictionary = function ({ languageNative, languageLearning }) {
                     size="small"
                   />
                 }
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
+                onChange={(e) => setSearchText(e.target.value.toLowerCase())}
                 onPressEnter={() => searchButtonRef.current.click()}
+                value={searchText}
               />
             </Form.Item>
-            <Form.Item name="mode" style={{ width: 160 }}>
+            <Form.Item
+              name="mode"
+              style={{ width: 160 }}
+              initialValue={modes[0].value}
+            >
               <Select
-                defaultValue="word"
                 size="large"
                 onChange={(value) => {
                   setMode(value)
                 }}
                 options={modes}
-              ></Select>
+              />
             </Form.Item>
           </Space.Compact>
         </Form>
@@ -179,121 +220,116 @@ const Dictionary = function ({ languageNative, languageLearning }) {
           borderRadius: borderRadius,
         }}
       >
-        {wordObject && (
-          <Flex
-            align="flex-start"
-            style={{
-              width: '100%',
-              background: 'white',
-              padding: 24,
-              borderRadius: 4,
-            }}
-            gap={48}
-          >
-            {wordObject.error ? (
-              <>
-                <Flex vertical gap={10}>
-                  <Title level={3} style={{ color: red[4], marginBottom: 0 }}>
+        <Flex
+          align="flex-start"
+          style={{
+            width: '100%',
+            background: 'white',
+            padding: 24,
+            borderRadius: 4,
+          }}
+          gap={48}
+        >
+          {wordObject.error ? (
+            <>
+              <Flex vertical gap={10}>
+                <Title level={3} style={{ color: red[4], marginBottom: 0 }}>
+                  {wordObject.word}
+                </Title>
+                <Flex>
+                  <Tag color="red">ERROR</Tag>
+                </Flex>
+                <Paragraph style={{ color: gray[0], margin: 0 }}>
+                  {wordObject.error}
+                </Paragraph>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Flex
+                style={{ minWidth: '24%', height: '100%' }}
+                vertical
+                gap={10}
+              >
+                <Flex align="center" justify="space-between">
+                  <Title level={3} style={{ color: blue[4], marginBottom: 0 }}>
                     {wordObject.word}
                   </Title>
-                  <Flex>
-                    <Tag color="red">ERROR</Tag>
-                  </Flex>
+                  <Button
+                    key="reload"
+                    type="text"
+                    size="large"
+                    title="Pronounce"
+                    onClick={() => {
+                      new Audio('/quack.mp3').play()
+                    }}
+                    // disabled={true}
+                    icon={<SoundFilled />}
+                  />
+                </Flex>
+                <Flex align="center">
+                  <Tag color="geekblue">{languageLearning}</Tag>
+                  <Tag color="geekblue">{wordObject.cefrLevel}</Tag>
+                  <Tag color="geekblue">
+                    {wordObject.partOfSpeech.toUpperCase()}
+                  </Tag>
+                  {/* langauge */}
+                </Flex>
+              </Flex>
+              <Flex vertical gap={10} style={{ width: '100%', height: '100%' }}>
+                <Flex vertical>
                   <Paragraph style={{ color: gray[0], margin: 0 }}>
-                    {wordObject.error}
+                    DEFINITION
                   </Paragraph>
+                  <Paragraph>{wordObject.definition}</Paragraph>
                 </Flex>
-              </>
-            ) : (
-              <>
-                <Flex
-                  style={{ minWidth: '24%', height: '100%' }}
-                  vertical
-                  gap={10}
-                >
-                  <Flex align="center" justify="space-between">
-                    <Title
-                      level={3}
-                      style={{ color: blue[4], marginBottom: 0 }}
-                    >
-                      {wordObject.word}
-                    </Title>
-                    <Button
-                      key="reload"
-                      type="text"
-                      size="large"
-                      title="Pronounce"
-                      onClick={() => {
-                        new Audio('/quack.mp3').play()
-                      }}
-                      // disabled={true}
-                      icon={<SoundFilled />}
-                    />
-                  </Flex>
-                  <Flex align="center">
-                    <Tag color="geekblue">{languageLearning}</Tag>
-                    <Tag color="geekblue">{wordObject.cefrLevel}</Tag>
-                    <Tag color="geekblue">{wordObject.partOfSpeech}</Tag>
-                    {/* langauge */}
-                  </Flex>
+                <Flex vertical>
+                  <Paragraph style={{ color: gray[0], margin: 0 }}>
+                    EXAMPLE
+                  </Paragraph>
+                  <Paragraph>&quot;{wordObject.example}&quot;</Paragraph>
                 </Flex>
-                <Flex
-                  vertical
-                  gap={10}
-                  style={{ width: '100%', height: '100%' }}
-                >
-                  <Flex vertical>
-                    <Paragraph style={{ color: gray[0], margin: 0 }}>
-                      DEFINITION
-                    </Paragraph>
-                    <Paragraph>{wordObject.definition}</Paragraph>
-                  </Flex>
-                  <Flex vertical>
-                    <Paragraph style={{ color: gray[0], margin: 0 }}>
-                      EXAMPLE
-                    </Paragraph>
-                    <Paragraph>&quot;{wordObject.example}&quot;</Paragraph>
-                  </Flex>
-                  <Flex vertical>
-                    <Paragraph style={{ color: gray[0], margin: 0 }}>
-                      {languageNative.toUpperCase()} TRANSLATION
-                    </Paragraph>
-                    <Paragraph>{wordObject.translation}</Paragraph>
-                  </Flex>
+                <Flex vertical>
+                  <Paragraph style={{ color: gray[0], margin: 0 }}>
+                    {languageNative.toUpperCase()} TRANSLATION
+                  </Paragraph>
+                  <Paragraph>{wordObject.translation}</Paragraph>
                 </Flex>
-                <Flex
-                  vertical
-                  align="center"
-                  justify="space-between"
-                  style={{
-                    // left border
-                    // borderLeft: `1px solid ${gray[2]}`, // set a soft gray border
-                    borderLeft: `1px solid ${colorBgLayout}`, // set a soft gray border
-                    alignSelf: 'stretch',
-                    paddingLeft: 12,
-                  }}
-                >
-                  <Button
-                    type="text"
-                    size="large"
-                    title="Clear search"
-                    disabled={true}
-                    icon={<ReloadOutlined />}
-                  />
-                  <Button
-                    type="text"
-                    size="large"
-                    disabled={
-                      loading || !wordObject || wordObject?.word === 'wordset'
-                    }
-                    title="Add to a sets"
-                    icon={<PlusCircleFilled />}
-                  />
-                </Flex>
-              </>
-            )}
-          </Flex>
-        )}
+              </Flex>
+              <Flex
+                vertical
+                align="center"
+                justify="space-between"
+                style={{
+                  // left border
+                  // borderLeft: `1px solid ${gray[2]}`, // set a soft gray border
+                  borderLeft: `1px solid ${colorBgLayout}`, // set a soft gray border
+                  alignSelf: 'stretch',
+                  paddingLeft: 12,
+                }}
+              >
+                <Button
+                  type="text"
+                  size="large"
+                  title="Clear search"
+                  disabled={true}
+                  icon={<ReloadOutlined />}
+                />
+                <Button
+                  type="text"
+                  size="large"
+                  disabled={
+                    gptSearchLoading ||
+                    !wordObject ||
+                    wordObject?.word === 'wordset'
+                  }
+                  title="Add to a sets"
+                  icon={<PlusCircleFilled />}
+                />
+              </Flex>
+            </>
+          )}
+        </Flex>
       </Flex>
     </>
   )
@@ -303,8 +339,7 @@ export default Dictionary
 
 const getSystemMessage = (mode, [languageLearning, languageNative]) => {
   return `
-  You function as a dictionary, provided a/an ${mode} and returning either a 'definition object' or an 'error object'.
-
+  You function as a ${languageLearning} dictionary, provided a ${mode} and returning either a 'definition object' or an 'error object'.
   Your task is to determine whether the provided ${mode} is belong to the ${languageLearning} or not.
 
   If you determine the provided ${mode} belong to the ${languageLearning}, return the 'definition object', otherwise, return the 'error object'.
@@ -365,9 +400,30 @@ const getSearchResultWithGPT = (
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log('data', JSON.parse(data.choices[0].message.content))
-        setSearchResult(JSON.parse(data.choices[0].message.content))
-        setLoading(false)
+        const res = JSON.parse(data.choices[0].message.content)
+        // refactor the response to standardize the response
+        if (res.error) {
+          const searchResult = {
+            word: res.word.toLowerCase(),
+            error: res.error,
+          }
+          setSearchResult(searchResult)
+          setLoading(false)
+          return
+        } else {
+          const values = Object.values(res)
+          const searchResult = {
+            word: values[0].toLowerCase(),
+            definition: values[1].toLowerCase(),
+            cefrLevel: values[2].toUpperCase(),
+            partOfSpeech: values[3].toLowerCase(),
+            example: values[4].toLowerCase(),
+            translation: values[5].toLowerCase(),
+          }
+          setSearchResult(searchResult)
+          setLoading(false)
+          return
+        }
       })
       .catch((error) => {
         message.error(error.message)
