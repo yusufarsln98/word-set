@@ -73,8 +73,10 @@ const ProfileLayout = ({ children }) => {
       <Flex
         vertical
         style={{
-          padding: '16px',
-          paddingTop: '32px',
+          // padding: '16px',
+          // paddingTop: '32px',
+          // paddingBottom: '32px',
+          padding: '32px 16px',
           width: '1200px',
         }}
         gap={32}

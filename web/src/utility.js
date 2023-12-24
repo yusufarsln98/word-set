@@ -9,3 +9,18 @@ export const capitalizeAll = (string) => {
 export const lowerCaseAll = (string) => {
   return string.toLowerCase()
 }
+
+export const printDateToLocaleString = (date) => {
+  return new Date(date).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+export const printDateToLocaleStringWithoutDay = (date) => {
+  return new Date(date).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+  })
+}

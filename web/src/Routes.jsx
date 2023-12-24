@@ -27,6 +27,7 @@ const Routes = () => {
   // const user = useAuth().currentUser
   return (
     <Router useAuth={useAuth}>
+      <Route path="/test" page={TestPage} name="test" />
       <Set wrap={LoginAndSignupPageLayout}>
         <Route path="/login" page={LoginPage} name="login" />
         <Route path="/signup" page={SignupPage} name="signup" />

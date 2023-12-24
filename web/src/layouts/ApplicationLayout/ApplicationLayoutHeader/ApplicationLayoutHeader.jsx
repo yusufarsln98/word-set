@@ -64,26 +64,12 @@ export const AVATAR_URL = [
 
 const ApplicationLayoutHeader = () => {
   const { pathname } = useLocation()
-
+  const { currentUser, logOut } = useAuth()
   const {
-    // isAuthenticated,
-    currentUser,
-    logOut,
-  } = useAuth()
-
-  const {
-    token: {
-      colorBgContainer,
-      colorBorder,
-      boxShadowTertiary,
-      colorBgBase,
-      colorBgLayout,
-      blue1,
-      blue10,
-    },
+    token: { colorBgContainer, colorBorder, colorBgLayout, blue10 },
   } = theme.useToken()
-
   const [openModal, setOpenModal] = useState(false)
+  const [form] = Form.useForm()
 
   const headerMenuItems = [
     {
@@ -326,7 +312,6 @@ const ApplicationLayoutHeader = () => {
   // get create folder mutation
   const [createFolder, { createLoading }] = useMutation(CREATE_FOLDER_MUTATION) // loading can be used for other scenarios, but not for this one
   const onFinishCreateFolder = (values) => {
-    console.log('Success:', values)
     // check if values are valid
     if (!values.folderName || !values.description) {
       message.error('Please enter a name and a description!')
@@ -341,11 +326,13 @@ const ApplicationLayoutHeader = () => {
       },
     })
       .then((res) => {
-        console.log(res)
+        form.resetFields()
         setOpenModal(false)
+        navigate(routes.folder({ folderId: res.data.createFolder.id }))
+        message.success(`Folder ${values.folderName} created!`)
       })
       .catch((err) => {
-        console.log(err)
+        message.error(err.message)
       })
       .finally(() => {})
   }
@@ -457,6 +444,7 @@ const ApplicationLayoutHeader = () => {
             onFinishCreateFolder(values)
           }}
           autoComplete="off"
+          form={form}
         >
           <Form.Item
             label="Folder Name"

@@ -1,5 +1,6 @@
+import { gray } from '@ant-design/colors'
 import { FolderOutlined } from '@ant-design/icons'
-import { Card, Flex, Select, Skeleton, Tag } from 'antd'
+import { Card, Divider, Flex, Select, Skeleton, Tag } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
@@ -7,6 +8,7 @@ import { MetaTags, useQuery } from '@redwoodjs/web'
 // import folder icon
 import styles from 'src/Global.module.scss'
 import { USER_QUERY_FOLDERS } from 'src/graphql_queries'
+import { printDateToLocaleStringWithoutDay } from 'src/utility'
 
 const FoldersPage = ({ userId }) => {
   const { data, loading, error } = useQuery(USER_QUERY_FOLDERS, {
@@ -27,11 +29,11 @@ const FoldersPage = ({ userId }) => {
         />
         {loading ? (
           <>
-            <HorizontalCardSkeleton />
+            <VerticalListSkeleton />
           </>
         ) : (
           <>
-            <FoldersList folders={data?.user?.folders} />
+            <VerticalList data={data?.user?.folders} />
           </>
         )}
       </Flex>
@@ -41,20 +43,42 @@ const FoldersPage = ({ userId }) => {
 
 export default FoldersPage
 
-const FoldersList = ({ folders }) => {
+export const VerticalList = ({ data }) => {
+  let previousMonth = null
   return (
     <Flex vertical gap={8}>
-      {folders?.map((folder) => (
-        <HorizontalFolderCard key={folder.id} folder={folder} />
-      ))}
+      {data?.map((instance) => {
+        const currentMonth = new Date(instance.createdAt).getMonth()
+
+        const shouldPrintDate = currentMonth !== previousMonth
+        previousMonth = currentMonth
+
+        const formattedDate = printDateToLocaleStringWithoutDay(
+          new Date(instance.createdAt)
+        )
+        return (
+          <>
+            {shouldPrintDate && (
+              <Divider orientation="left">{formattedDate}</Divider>
+            )}
+            <HorizontalCard key={instance.id} instance={instance} />
+          </>
+        )
+      })}
     </Flex>
   )
 }
 
-const HorizontalFolderCard = ({ folder }) => {
+const HorizontalCard = ({ instance }) => {
   return (
     <>
-      <Link to={routes.folder({ folderId: folder.id })}>
+      <Link
+        to={
+          instance.__typename === 'Set'
+            ? routes.set({ setId: instance.id })
+            : routes.folder({ folderId: instance.id })
+        }
+      >
         <Card
           style={{
             width: '100%',
@@ -63,18 +87,27 @@ const HorizontalFolderCard = ({ folder }) => {
           className={styles.hoverable}
         >
           <Flex vertical gap={2}>
-            <p>
-              {folder.sets.length}
-              <> </>
-              {folder.sets.length === 1 ? 'set' : 'sets'}
+            <p
+              style={{
+                fontSize: '12px',
+                color: gray[5],
+                marginBottom: '0px',
+              }}
+            >
+              {instance.__typename === 'Folder'
+                ? `${instance.sets.length} set` +
+                  `${instance.sets.length != 1 ? 's' : ''}`
+                : `${instance.flashCards.length} flashcard` +
+                  `${instance.flashCards.length != 1 ? 's' : ''}`}
             </p>
-            <Flex gap={8} align="center" justify="start">
+            <Flex gap={16} align="center" justify="start">
               <FolderOutlined
                 style={{
-                  fontSize: '16px',
+                  fontSize: '24px',
+                  color: gray[1],
                 }}
               />
-              <p>{folder.title}</p>
+              <p style={{ fontSize: '16px' }}>{instance.title}</p>
             </Flex>
           </Flex>
         </Card>
@@ -83,7 +116,7 @@ const HorizontalFolderCard = ({ folder }) => {
   )
 }
 
-export const HorizontalCardSkeleton = () => {
+export const VerticalListSkeleton = () => {
   return (
     <>
       <Flex vertical gap={8}>

@@ -4,6 +4,7 @@ import { Button, Card, Empty, Flex, Image, Skeleton, Space, Tag } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
 
+import { useAuth } from 'src/auth'
 import styles from 'src/Global.module.scss'
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
 
@@ -88,7 +89,8 @@ const CardListOfUser = ({ data, quantity }) => {
 
 const TheCard = ({ instance, quantity }) => {
   const { user } = instance
-  const { userConfig } = user
+  // const { userConfig } = user get user config from auth
+  const { userConfig } = useAuth().currentUser
 
   return (
     <>

@@ -18,6 +18,7 @@ export const FOLDER_QUERY = gql`
       user {
         id
         username
+        name
         userConfig {
           id
           defaultAvatarIndex
@@ -25,6 +26,8 @@ export const FOLDER_QUERY = gql`
       }
       sets {
         id
+        title
+        description
       }
     }
   }
@@ -82,19 +85,41 @@ export const USER_QUERY_SETS = gql`
         flashCards {
           id
         }
-        userId
-        user {
-          id
-          username
-          userConfig {
-            id
-            defaultAvatarIndex
-          }
-        }
       }
     }
   }
 `
+export const USER_QUERY_SETS_UNDETAILED = gql`
+  query UserSetsUndetailed($userId: Int!) {
+    user(id: $userId) {
+      id
+      sets {
+        id
+        title
+      }
+    }
+  }
+`
+
+export const ADD_SET_TO_FOLDER_MUTATION = gql`
+  mutation AddSetToFolderMutation($id: Int!, $input: AddSetToFolderInput!) {
+    addSetToFolder(id: $id, input: $input) {
+      id
+    }
+  }
+`
+
+export const REMOVE_SET_FROM_FOLDER_MUTATION = gql`
+  mutation RemoveSetFromFolderMutation(
+    $id: Int!
+    $input: RemoveSetFromFolderInput!
+  ) {
+    removeSetFromFolder(id: $id, input: $input) {
+      id
+    }
+  }
+`
+
 export const USER_QUERY_UNDETAILED = gql`
   query UndetailedUserQuery($id: Int!) {
     user(id: $id) {
@@ -116,6 +141,33 @@ export const USER_QUERY_ACTIVITY = gql`
     }
   }
 `
+export const UPDATE_USER_CONFIG_MUTATION = gql`
+  mutation UpdateUserConfigMutation(
+    $id: Int!
+    $defaultAvatarIndex: Int
+    $birthday: DateTime
+    $gender: Gender
+    $theme: Theme
+    $languageNative: Language
+    $languageLearning: Language
+  ) {
+    updateUserConfig(
+      id: $id
+      input: {
+        defaultAvatarIndex: $defaultAvatarIndex
+        birthday: $birthday
+        gender: $gender
+        theme: $theme
+        languageNative: $languageNative
+        languageLearning: $languageLearning
+      }
+    ) {
+      id
+      defaultAvatarIndex
+      birthday
+    }
+  }
+`
 export const CREATE_SET_MUTATION = gql`
   mutation CreateSetMutation(
     $title: String!
@@ -123,6 +175,7 @@ export const CREATE_SET_MUTATION = gql`
     $userId: Int!
     $termsLanguage: Language!
     $translationsLanguage: Language!
+    $flashCards: [Int]
   ) {
     createSet(
       input: {
@@ -131,6 +184,7 @@ export const CREATE_SET_MUTATION = gql`
         userId: $userId
         termsLanguage: $termsLanguage
         translationsLanguage: $translationsLanguage
+        flashCards: $flashCards
       }
     ) {
       id
@@ -301,7 +355,6 @@ export const QUERY_WORD = gql`
     }
   }
 `
-
 export const QUERY_WORD_BY_SEARCH = gql`
   query WordBySearch($search: String!) {
     wordBySearch(search: $search) {

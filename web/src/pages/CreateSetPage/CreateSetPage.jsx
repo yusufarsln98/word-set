@@ -2,13 +2,25 @@ import { useEffect, useState } from 'react'
 
 import { gray } from '@ant-design/colors'
 import { UserOutlined, PlusOutlined } from '@ant-design/icons'
-import { AutoComplete, Button, Flex, Form, Input, Space, message } from 'antd'
+import { Language } from '@prisma/client'
+import {
+  AutoComplete,
+  Button,
+  Flex,
+  Form,
+  Input,
+  Modal,
+  Space,
+  message,
+} from 'antd'
 
-import { Link, routes } from '@redwoodjs/router'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import { MetaTags, useMutation } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import { CREATE_SET_MUTATION } from 'src/graphql'
+import { CREATE_SET_MUTATION } from 'src/graphql_queries'
+
+import styles from '../../Global.module.scss'
 
 const renderTitle = (title) => <span>{title}</span>
 const renderItem = (title, count) => ({
@@ -42,7 +54,7 @@ const CreateSetPage = () => {
   const [form] = Form.useForm()
   const [flashcards, setFlashcards] = useState([])
   const user = useAuth().currentUser
-  const { userConfig } = user
+  const [openAddFlashcardModal, setOpenAddFlashcardModal] = useState(false)
   const [createSet, { loading, error }] = useMutation(CREATE_SET_MUTATION, {
     onCompleted: (data) => {
       console.log(data)
@@ -56,14 +68,19 @@ const CreateSetPage = () => {
         title: values.title,
         description: values.description,
         userId: user.id,
-        termsLanguage: userConfig.languageNative,
-        translationsLanguage: userConfig.languageLearning,
-        flashCards: flashcards,
+        termsLanguage: Language[user.userConfig.languageLearning],
+        translationsLanguage: Language[user.userConfig.languageNative],
       },
-    }).finally(() => {
-      message.success('Set created!')
-      form.resetFields()
     })
+      .then((data) => {
+        message.success('Set created!')
+        console.log('data', data.data.createSet.id)
+        navigate(routes.set({ setId: data.data.createSet.id }))
+      })
+      .catch((error) => {
+        console.error(error)
+        message.error('Something went wrong!')
+      })
   }
 
   return (
@@ -75,6 +92,7 @@ const CreateSetPage = () => {
         style={{ width: '100%' }}
         layout="vertical"
         form={form}
+        autoComplete="off"
       >
         <Flex align="center" justify="space-between">
           <h1 style={{ color: gray[6] }}>Create new word set</h1>
@@ -95,6 +113,10 @@ const CreateSetPage = () => {
             name="title"
             rules={[
               {
+                required: true,
+                message: 'Please write a title!',
+              },
+              {
                 max: 50,
                 message: 'Name should be less than 100 characters!',
               },
@@ -109,12 +131,17 @@ const CreateSetPage = () => {
               placeholder="Enter a title, like 'The Vocabulary of the The Grapes of Wrath'"
               size="large"
               bordered={false}
+              className={styles.bottemBorder}
             />
           </Form.Item>
           <Flex align="center" gap={32}>
             <Form.Item
               name="description"
               rules={[
+                {
+                  required: true,
+                  message: 'Please write a description!',
+                },
                 {
                   max: 100,
                   message: 'Description should be less than 100 characters!',
@@ -133,50 +160,57 @@ const CreateSetPage = () => {
                 // disable resizing of textarea
                 autoSize={{ minRows: 4, maxRows: 4 }}
                 bordered={false}
+                className={styles.bottemBorder}
               />
-            </Form.Item>
-            <Form.Item>
-              <Flex vertical style={{ width: '100%' }} gap={24}>
-                <Input
-                  title="Native language"
-                  size="large"
-                  style={{ height: 44, width: 320, backgroundColor: 'white' }}
-                  contentEditable={false}
-                  value={userConfig?.languageNative}
-                  bordered={false}
-                />
-                <Input
-                  title="Learning language"
-                  size="large"
-                  style={{ height: 44, width: 320, backgroundColor: 'white' }}
-                  contentEditable={false}
-                  value={userConfig?.languageLearning}
-                  bordered={false}
-                />
-              </Flex>
             </Form.Item>
           </Flex>
         </Flex>
-        <Flex vertical>
-          <h2 style={{ color: gray[6] }}>Add flashcards</h2>
-        </Flex>
-        <Form.Item>
-          <AutoComplete
-            // popupMatchSelectWidth={(calcWidth) => calcWidth}
-            style={{
-              marginTop: 28,
-              width: 'calc(100% - 352px)',
-            }}
-            options={options}
-            onSelect={(value) => message.success('onSelect')}
+        <Form.Item
+          style={{
+            marginTop: 28,
+          }}
+          name="flashcards"
+        >
+          <Button
+            icon={<PlusOutlined />}
+            type="dashed"
+            size="large"
+            onClick={() => setOpenAddFlashcardModal(true)}
           >
-            <Input
-              size="large"
-              placeholder="Search a word"
-              style={{ height: 48, backgroundColor: 'white' }}
-              bordered={false}
-            />
-          </AutoComplete>
+            Add Flashcards
+          </Button>
+          <Modal
+            title="Add Flashcard"
+            open={openAddFlashcardModal}
+            onCancel={() => setOpenAddFlashcardModal(false)}
+            footer={null}
+          >
+            <Flex
+              style={{
+                height: '500px',
+                top: 100,
+                overflow: 'hidden',
+              }}
+            >
+              <AutoComplete
+                // popupMatchSelectWidth={(calcWidth) => calcWidth}
+                style={{
+                  marginTop: 28,
+                  width: 'calc(100%)',
+                }}
+                options={options}
+                onSelect={(value) => message.success('onSelect')}
+              >
+                <Input
+                  size="large"
+                  placeholder="Search a word..."
+                  style={{ height: 48, backgroundColor: 'white' }}
+                  bordered={false}
+                  className={styles.bottemBorder}
+                />
+              </AutoComplete>
+            </Flex>
+          </Modal>
         </Form.Item>
       </Form>
     </>

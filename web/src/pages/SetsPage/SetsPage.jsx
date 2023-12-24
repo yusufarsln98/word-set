@@ -7,7 +7,7 @@ import { MetaTags, useQuery } from '@redwoodjs/web'
 import styles from 'src/Global.module.scss'
 import { USER_QUERY_SETS } from 'src/graphql_queries'
 
-import { HorizontalCardSkeleton } from '../FoldersPage/FoldersPage'
+import { VerticalList, VerticalListSkeleton } from '../FoldersPage/FoldersPage'
 
 const SetsPage = ({ userId }) => {
   const { data, loading, error } = useQuery(USER_QUERY_SETS, {
@@ -27,11 +27,11 @@ const SetsPage = ({ userId }) => {
         />
         {loading ? (
           <>
-            <HorizontalCardSkeleton />
+            <VerticalListSkeleton />
           </>
         ) : (
           <>
-            <SetsList sets={data?.user?.sets} />
+            <VerticalList data={data?.user?.sets} />
           </>
         )}
       </Flex>
@@ -40,45 +40,3 @@ const SetsPage = ({ userId }) => {
 }
 
 export default SetsPage
-
-const SetsList = ({ sets }) => {
-  return (
-    <Flex vertical gap={8}>
-      {sets?.map((set) => (
-        <HorizontalSetCard key={set.id} set={set} />
-      ))}
-    </Flex>
-  )
-}
-
-const HorizontalSetCard = ({ set }) => {
-  return (
-    <>
-      <Link to={routes.set({ setId: set.id })}>
-        <Card
-          style={{
-            width: '100%',
-          }}
-          size="small"
-          className={styles.hoverable}
-        >
-          <Flex vertical gap={2}>
-            <p>
-              {set.flashCards.length}
-              <> </>
-              {set.flashCards.length === 1 ? 'set' : 'sets'}
-            </p>
-            <Flex gap={8} align="center" justify="start">
-              <BlockOutlined
-                style={{
-                  fontSize: '16px',
-                }}
-              />
-              <p>{set.title}</p>
-            </Flex>
-          </Flex>
-        </Card>
-      </Link>
-    </>
-  )
-}
