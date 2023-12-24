@@ -31,6 +31,7 @@ CREATE TABLE "User" (
     "roles" "Role"[] DEFAULT ARRAY['USER']::"Role"[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "daysStudied" TIMESTAMP(3)[],
+    "dictionaryId" INTEGER NOT NULL DEFAULT 1,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -72,7 +73,7 @@ CREATE TABLE "Set" (
     "termsLanguage" "Language" NOT NULL,
     "translationsLanguage" "Language" NOT NULL,
     "folderId" INTEGER,
-    "userId" INTEGER,
+    "userId" INTEGER NOT NULL,
 
     CONSTRAINT "Set_pkey" PRIMARY KEY ("id")
 );
@@ -80,8 +81,8 @@ CREATE TABLE "Set" (
 -- CreateTable
 CREATE TABLE "FlashCard" (
     "id" SERIAL NOT NULL,
-    "term" TEXT NOT NULL,
-    "cardId" INTEGER NOT NULL,
+    "wordId" INTEGER NOT NULL,
+    "meaningIndex" INTEGER NOT NULL DEFAULT 0,
     "boost" DOUBLE PRECISION NOT NULL DEFAULT 1,
     "setId" INTEGER NOT NULL,
 
@@ -89,27 +90,36 @@ CREATE TABLE "FlashCard" (
 );
 
 -- CreateTable
+CREATE TABLE "Dictionary" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "termsLanguage" "Language" NOT NULL,
+    "translationsLanguage" "Language" NOT NULL,
+
+    CONSTRAINT "Dictionary_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Word" (
     "id" SERIAL NOT NULL,
     "term" TEXT NOT NULL,
-    "termSearch" TEXT NOT NULL,
-    "termsLanguage" "Language" NOT NULL,
-    "translationsLanguage" "Language" NOT NULL,
+    "search" TEXT NOT NULL,
+    "dictionaryId" INTEGER NOT NULL,
 
     CONSTRAINT "Word_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "Card" (
+CREATE TABLE "Meaning" (
     "id" SERIAL NOT NULL,
-    "translation" TEXT NOT NULL,
     "definition" TEXT NOT NULL,
     "example" TEXT NOT NULL,
     "cefrLevel" TEXT NOT NULL,
     "partOfSpeech" TEXT NOT NULL,
+    "translation" TEXT NOT NULL,
     "wordId" INTEGER NOT NULL,
 
-    CONSTRAINT "Card_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Meaning_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -122,7 +132,13 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 CREATE UNIQUE INDEX "UserConfig_userId_key" ON "UserConfig"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Word_termSearch_key" ON "Word"("termSearch");
+CREATE UNIQUE INDEX "Dictionary_name_key" ON "Dictionary"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Word_search_key" ON "Word"("search");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_dictionaryId_fkey" FOREIGN KEY ("dictionaryId") REFERENCES "Dictionary"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "UserConfig" ADD CONSTRAINT "UserConfig_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "Avatar"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -137,13 +153,16 @@ ALTER TABLE "Folder" ADD CONSTRAINT "Folder_userId_fkey" FOREIGN KEY ("userId") 
 ALTER TABLE "Set" ADD CONSTRAINT "Set_folderId_fkey" FOREIGN KEY ("folderId") REFERENCES "Folder"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Set" ADD CONSTRAINT "Set_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Set" ADD CONSTRAINT "Set_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "FlashCard" ADD CONSTRAINT "FlashCard_cardId_fkey" FOREIGN KEY ("cardId") REFERENCES "Card"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FlashCard" ADD CONSTRAINT "FlashCard_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "Word"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "FlashCard" ADD CONSTRAINT "FlashCard_setId_fkey" FOREIGN KEY ("setId") REFERENCES "Set"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Card" ADD CONSTRAINT "Card_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "Word"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Word" ADD CONSTRAINT "Word_dictionaryId_fkey" FOREIGN KEY ("dictionaryId") REFERENCES "Dictionary"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Meaning" ADD CONSTRAINT "Meaning_wordId_fkey" FOREIGN KEY ("wordId") REFERENCES "Word"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

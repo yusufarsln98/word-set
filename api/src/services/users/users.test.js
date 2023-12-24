@@ -19,24 +19,26 @@ describe('users', () => {
     expect(result).toEqual(scenario.user.one)
   })
 
-  scenario('creates a user', async () => {
+  scenario('creates a user', async (scenario) => {
     const result = await createUser({
       input: {
         name: 'String',
-        username: 'String9120372',
-        email: 'String5573263',
+        username: 'String1231191',
+        email: 'String497900',
         hashedPassword: 'String',
         salt: 'String',
-        daysStudied: '2023-12-20T12:56:15.730Z',
+        daysStudied: '2023-12-23T13:54:06.099Z',
+        dictionaryId: scenario.user.two.dictionaryId,
       },
     })
 
     expect(result.name).toEqual('String')
-    expect(result.username).toEqual('String9120372')
-    expect(result.email).toEqual('String5573263')
+    expect(result.username).toEqual('String1231191')
+    expect(result.email).toEqual('String497900')
     expect(result.hashedPassword).toEqual('String')
     expect(result.salt).toEqual('String')
-    expect(result.daysStudied).toEqual(new Date('2023-12-20T12:56:15.730Z'))
+    expect(result.daysStudied).toEqual(new Date('2023-12-23T13:54:06.099Z'))
+    expect(result.dictionaryId).toEqual(scenario.user.two.dictionaryId)
   })
 
   scenario('updates a user', async (scenario) => {

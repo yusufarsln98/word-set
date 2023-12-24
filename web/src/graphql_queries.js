@@ -8,7 +8,6 @@ export const FOLDERS_QUERY = gql`
     }
   }
 `
-
 export const FOLDER_QUERY = gql`
   query FolderQuery($id: Int!) {
     folder(id: $id) {
@@ -30,7 +29,6 @@ export const FOLDER_QUERY = gql`
     }
   }
 `
-// create folder
 export const CREATE_FOLDER_MUTATION = gql`
   mutation CreateFolderMutation(
     $title: String!
@@ -47,7 +45,6 @@ export const CREATE_FOLDER_MUTATION = gql`
     }
   }
 `
-
 export const USER_QUERY_FOLDERS = gql`
   query UserFolders($userId: Int!) {
     user(id: $userId) {
@@ -73,7 +70,6 @@ export const USER_QUERY_FOLDERS = gql`
     }
   }
 `
-
 export const USER_QUERY_SETS = gql`
   query UserSets($userId: Int!) {
     user(id: $userId) {
@@ -99,7 +95,6 @@ export const USER_QUERY_SETS = gql`
     }
   }
 `
-
 export const USER_QUERY_UNDETAILED = gql`
   query UndetailedUserQuery($id: Int!) {
     user(id: $id) {
@@ -113,7 +108,6 @@ export const USER_QUERY_UNDETAILED = gql`
     }
   }
 `
-
 export const USER_QUERY_ACTIVITY = gql`
   query UserActivity($userId: Int!) {
     user(id: $userId) {
@@ -122,7 +116,6 @@ export const USER_QUERY_ACTIVITY = gql`
     }
   }
 `
-
 export const CREATE_SET_MUTATION = gql`
   mutation CreateSetMutation(
     $title: String!
@@ -158,8 +151,6 @@ export const CREATE_SET_MUTATION = gql`
     }
   }
 `
-
-// create dictionary
 export const CREATE_DICTIONARY_MUTATION = gql`
   mutation CreateDictionaryMutation(
     $name: String!
@@ -190,7 +181,6 @@ export const QUERY_DICTIONARIES = gql`
     }
   }
 `
-
 export const QUERY_DICTIONARY = gql`
   query DictionaryQuery($id: Int!) {
     dictionary(id: $id) {
@@ -214,8 +204,6 @@ export const QUERY_DICTIONARY = gql`
     }
   }
 `
-
-// dictionary by name
 export const QUERY_DICTIONARY_BY_NAME = gql`
   query DictionaryByName($name: String!) {
     dictionaryByName(name: $name) {
@@ -223,35 +211,72 @@ export const QUERY_DICTIONARY_BY_NAME = gql`
       name
       termsLanguage
       translationsLanguage
-      words {
+    }
+  }
+`
+export const CREATE_WORD_MUTATION = gql`
+  mutation CreateWordMutation(
+    $term: String!
+    $dictionaryId: Int!
+    $definition: String!
+    $example: String!
+    $cefrLevel: String!
+    $partOfSpeech: String!
+    $translation: String!
+  ) {
+    createWord(
+      input: {
+        term: $term
+        dictionaryId: $dictionaryId
+        cefrLevel: $cefrLevel
+        definition: $definition
+        example: $example
+        translation: $translation
+        partOfSpeech: $partOfSpeech
+      }
+    ) {
+      id
+      term
+      search
+      meanings {
         id
-        term
-        search
-        meanings {
-          id
-          definition
-          example
-          cefrLevel
-          partOfSpeech
-          translation
-        }
+        definition
+        example
+        cefrLevel
+        partOfSpeech
+        translation
       }
     }
   }
 `
-
-// create word
-export const CREATE_WORD_MUTATION = gql`
-  mutation CreateWordMutation($term: String!, $dictionaryId: Int!) {
-    createWord(input: { term: $term, dictionaryId: $dictionaryId }) {
+export const CREATE_MEANING_MUTATION = gql`
+  mutation CreateMeaningMutation(
+    $definition: String!
+    $cefrLevel: String!
+    $partOfSpeech: String!
+    $example: String!
+    $translation: String!
+    $wordId: Int!
+  ) {
+    createMeaning(
+      input: {
+        definition: $definition
+        cefrLevel: $cefrLevel
+        partOfSpeech: $partOfSpeech
+        example: $example
+        translation: $translation
+        wordId: $wordId
+      }
+    ) {
       id
-      term
-      search
+      definition
+      cefrLevel
+      partOfSpeech
+      example
+      translation
     }
   }
 `
-
-// delete word
 export const DELETE_WORD_MUTATION = gql`
   mutation DeleteWordMutation($id: Int!) {
     deleteWord(id: $id) {
@@ -259,8 +284,6 @@ export const DELETE_WORD_MUTATION = gql`
     }
   }
 `
-
-// get word
 export const QUERY_WORD = gql`
   query WordQuery($id: Int!) {
     word(id: $id) {
@@ -279,7 +302,6 @@ export const QUERY_WORD = gql`
   }
 `
 
-// get word by search
 export const QUERY_WORD_BY_SEARCH = gql`
   query WordBySearch($search: String!) {
     wordBySearch(search: $search) {

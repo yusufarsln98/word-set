@@ -1,10 +1,10 @@
 import { db } from 'src/lib/db'
 
-export const users = async () => {
+export const users = () => {
   return db.user.findMany()
 }
 
-export const user = async ({ id }) => {
+export const user = ({ id }) => {
   return db.user.findUnique({
     where: { id },
   })
@@ -32,6 +32,9 @@ export const deleteUser = ({ id }) => {
 export const User = {
   userConfig: (_obj, { root }) => {
     return db.user.findUnique({ where: { id: root?.id } }).userConfig()
+  },
+  dictionary: (_obj, { root }) => {
+    return db.user.findUnique({ where: { id: root?.id } }).dictionary()
   },
   folders: (_obj, { root }) => {
     return db.user.findUnique({ where: { id: root?.id } }).folders()

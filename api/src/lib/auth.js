@@ -48,6 +48,13 @@ export const getCurrentUser = async (session) => {
           },
         },
       },
+      dictionaryId: true,
+      dictionary: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   })
 }

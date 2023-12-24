@@ -12,6 +12,8 @@ export const schema = gql`
     createdAt: DateTime!
     daysStudied: [DateTime]!
     userConfig: UserConfig
+    dictionary: Dictionary!
+    dictionaryId: Int!
     folders: [Folder]!
     sets: [Set]!
   }
@@ -37,6 +39,7 @@ export const schema = gql`
     resetTokenExpiresAt: DateTime
     roles: [Role]!
     daysStudied: [DateTime]!
+    dictionaryId: Int!
   }
 
   input UpdateUserInput {
@@ -49,6 +52,7 @@ export const schema = gql`
     resetTokenExpiresAt: DateTime
     roles: [Role]!
     daysStudied: [DateTime]!
+    dictionaryId: Int
   }
 
   type Mutation {

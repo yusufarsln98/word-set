@@ -18,6 +18,16 @@ export const schema = gql`
   input CreateWordInput {
     term: String!
     dictionaryId: Int!
+
+    # a meaning also have to be provided when creating a word
+    # however, the meaning wants a wordId, which is not known.
+    # therefore, the meaning is created in the resolver. other fields
+    # are provided here
+    definition: String!
+    example: String!
+    cefrLevel: String!
+    partOfSpeech: String!
+    translation: String!
   }
 
   input UpdateWordInput {

@@ -102,12 +102,19 @@ export const handler = async (event, context) => {
     //
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
-    handler: ({
+    handler: async ({
       username,
       hashedPassword,
       salt,
       userAttributes, // this will be changed when name, username, birthday, etc. are added
     }) => {
+      // get dictionary based on languageLearning and languageNative
+      const dictionary = await db.dictionary.findUnique({
+        where: {
+          name: `${userAttributes.languageLearning}-${userAttributes.languageNative}`,
+        },
+      })
+      // create user and connect to dictionary
       return db.user.create({
         data: {
           email: username,
@@ -123,6 +130,11 @@ export const handler = async (event, context) => {
               languageNative: userAttributes.languageNative,
               languageLearning: userAttributes.languageLearning,
               defaultAvatarIndex: Math.floor(Math.random() * 16),
+            },
+          },
+          dictionary: {
+            connect: {
+              id: dictionary.id,
             },
           },
         },

@@ -60,6 +60,9 @@ model User {
 
   userConfig          UserConfig?
 
+  dictionary          Dictionary @relation(fields: [dictionaryId], references: [id])
+  dictionaryId        Int        @default(1)
+
   folders             Folder[]
   sets                Set[]
 }
@@ -131,11 +134,12 @@ model FlashCard {
 
 
 model Dictionary {
-  id                   Int         @id @default(autoincrement())
-  name                 String      @unique // combination of termsLanguage and translationsLanguage (e.g. "English-Turkish")
-  termsLanguage        Language
-  translationsLanguage Language
-  words                Word[]
+  id                    Int         @id @default(autoincrement())
+  name                  String      @unique // combination of termsLanguage and translationsLanguage (e.g. "English-Turkish")
+  termsLanguage         Language
+  translationsLanguage  Language
+  words                 Word[]
+  users                 User[]
 }
 
 //  -------- Word --------
