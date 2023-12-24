@@ -27,9 +27,9 @@ export const handler = async (event, context) => {
       // for security reasons you may want to be vague here rather than expose
       // the fact that the email address wasn't found (prevents fishing for
       // valid email addresses)
-      usernameNotFound: 'Username not found',
+      usernameNotFound: 'Email not found',
       // if the user somehow gets around client validation
-      usernameRequired: 'Username is required',
+      usernameRequired: 'Email is required',
     },
   }
 
@@ -120,9 +120,6 @@ export const handler = async (event, context) => {
           email: username,
           hashedPassword: hashedPassword,
           salt: salt,
-          name: username,
-          username: username,
-          // if username is admin@admin.com, set role as admin. Delete this later!
           roles: username === 'admin@admin.com' ? ['ADMIN'] : ['USER'],
           userConfig: {
             create: {

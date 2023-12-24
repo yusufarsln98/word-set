@@ -26,9 +26,20 @@ export const schema = gql`
     userId: Int
   }
 
+  input AddSetToFolderInput {
+    setId: Int!
+  }
+
+  input RemoveSetFromFolderInput {
+    setId: Int!
+  }
+
   type Mutation {
     createFolder(input: CreateFolderInput!): Folder! @requireAuth
     updateFolder(id: Int!, input: UpdateFolderInput!): Folder! @requireAuth
     deleteFolder(id: Int!): Folder! @requireAuth
+    addSetToFolder(id: Int!, input: AddSetToFolderInput!): Folder! @requireAuth
+    removeSetFromFolder(id: Int!, input: RemoveSetFromFolderInput!): Folder!
+      @requireAuth
   }
 `

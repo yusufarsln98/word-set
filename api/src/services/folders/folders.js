@@ -23,6 +23,32 @@ export const updateFolder = ({ id, input }) => {
   })
 }
 
+export const addSetToFolder = ({ id, input }) => {
+  return db.folder.update({
+    data: {
+      sets: {
+        connect: {
+          id: input.setId,
+        },
+      },
+    },
+    where: { id },
+  })
+}
+
+export const removeSetFromFolder = ({ id, input }) => {
+  return db.folder.update({
+    data: {
+      sets: {
+        disconnect: {
+          id: input.setId,
+        },
+      },
+    },
+    where: { id },
+  })
+}
+
 export const deleteFolder = ({ id }) => {
   return db.folder.delete({
     where: { id },

@@ -19,3 +19,20 @@
 .cursorPointer {
   cursor: pointer;
 }
+
+.bottemBorder {
+  border-bottom: 2px solid transparent;
+  // on focus and hover
+  &:hover {
+    border-bottom: 2px solid transparent;
+  }
+  &:focus {
+    border-bottom: 2px solid #3872e6;
+  }
+}
+
+.hoverableAvatar {
+  &:hover {
+    box-shadow: 0 0 0 0.2rem rgba(56, 114, 230, 0.25);
+  }
+}
