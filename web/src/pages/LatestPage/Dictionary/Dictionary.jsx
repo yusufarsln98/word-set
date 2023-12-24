@@ -163,7 +163,7 @@ const Dictionary = function ({ languageNative, languageLearning }) {
   return (
     <>
       <Flex align="center" justify="start">
-        <Form>
+        <Form autoComplete="off">
           <Space.Compact style={{ marginTop: 20 }}>
             <Form.Item style={{ width: 576 }} name="searchText">
               <Input
