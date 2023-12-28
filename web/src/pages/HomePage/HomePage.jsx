@@ -50,15 +50,8 @@ export const HOMEPAGE_USER_QUERY = gql`
 `
 
 const HomePage = () => {
-  const { isAuthenticated } = useAuth()
   const currentUser = useAuth().currentUser
   const { languageLearning, languageNative } = useAuth().currentUser.userConfig
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate(routes.login())
-    }
-  }, [isAuthenticated])
 
   const {
     data: userData,
@@ -68,7 +61,8 @@ const HomePage = () => {
     variables: { id: currentUser.id },
   })
   const { folders, sets } = userData?.user ?? {}
-  const user = { ...userData?.user, folders: null, sets: null }
+  const user = { ...userData?.user }
+
   return (
     <>
       <MetaTags

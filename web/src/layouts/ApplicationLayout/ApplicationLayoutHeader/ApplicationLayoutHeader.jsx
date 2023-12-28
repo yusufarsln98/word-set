@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   PlusOutlined,
@@ -342,6 +342,7 @@ const ApplicationLayoutHeader = () => {
       })
       .finally(() => {})
   }
+
   return (
     <>
       <Header

@@ -68,17 +68,16 @@ const DictionariesPage = () => {
     <>
       <MetaTags title="Admin" />
       <Flex vertical>
-        {!dictonaries && (
-          <HappyProvider>
-            <Button
-              size="large"
-              onClick={onClick}
-              loading={createDictionariesLoading || queryDictionariesLoading}
-            >
-              Create all dictonaries!
-            </Button>
-          </HappyProvider>
-        )}
+        <HappyProvider>
+          <Button
+            size="large"
+            onClick={onClick}
+            loading={createDictionariesLoading}
+            disabled={dictonaries?.dictionaries?.length === 56}
+          >
+            Create all dictonaries!
+          </Button>
+        </HappyProvider>
         <Table
           title={() => <h2>Dictionaries</h2>}
           // click on row

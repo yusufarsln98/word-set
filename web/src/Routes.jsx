@@ -34,28 +34,28 @@ const Routes = () => {
         <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       </Set>
-      <PrivateSet unauthenticated="home" wrap={ApplicationLayout}>
+      <PrivateSet unauthenticated="login" wrap={ApplicationLayout}>
         <Route path="/" page={HomePage} name="home" />
-        <PrivateSet unauthenticated="home" wrap={SetAndFolderLayout}>
+        <PrivateSet unauthenticated="login" wrap={SetAndFolderLayout}>
           <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
           {/* <Route path="/set" page={SetPage} name="set" /> */}
           <Route path="/set/{setId:Int}" page={SetPage} name="set" />
           <Route path="/create-set" page={CreateSetPage} name="createSet" />
         </PrivateSet>
-        <PrivateSet unauthenticated="home" wrap={ProfileLayout}>
+        <PrivateSet unauthenticated="login" wrap={ProfileLayout}>
           <Route path="/user/{userId:Int}/recent-activities" page={ProfilePage} name="profile" />
           <Route path="/user/{userId:Int}/folders" page={FoldersPage} name="folders" />
           <Route path="/user/{userId:Int}/sets" page={SetsPage} name="sets" />
           <Route path="/user/{userId:Int}/settings" page={SettingsPage} name="settings" />
         </PrivateSet>
       </PrivateSet>
-      <PrivateSet unauthenticated="home" roles="ADMIN" wrap={AdminLayout}>
+      <PrivateSet unauthenticated="login" roles="ADMIN" wrap={AdminLayout}>
         <Route path="/admin" page={AdminPage} name="admin" />
         {/* Uygulamayi sifirdan calistirirken, sozlukler sayfasini acik yapmaliyiz. */}
-        <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
         <Route path="/admin/dictionaries/{dictionaryId:Int}/words" page={WordsPage} name="words" />
       </PrivateSet>
       <Route notfound page={NotFoundPage} />
+      <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
     </Router>
   )
 }
