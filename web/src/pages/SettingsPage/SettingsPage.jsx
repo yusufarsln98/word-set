@@ -22,7 +22,7 @@ import {
 } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
-import { MetaTags, useMutation } from '@redwoodjs/web'
+import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
 import { UPDATE_USER_CONFIG_MUTATION } from 'src/graphql_queries'
@@ -30,25 +30,50 @@ import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeade
 
 import styles from '../../Global.module.scss'
 
-const SettingsPage = ({ userId }) => {
-  const user = useAuth().currentUser
-  const { userConfig } = user
-  const [updateUserConfig, { loading, error }] = useMutation(
-    UPDATE_USER_CONFIG_MUTATION,
-    {
-      onCompleted: () => {
-        window.location.reload()
-      },
+export const SETTINGS_USER_QUERY = gql`
+  query SettingsUserQuery($id: Int!) {
+    user(id: $id) {
+      id
+      name
+      username
+      email
+      createdAt
+      userConfig {
+        id
+        defaultAvatarIndex
+        birthday
+        languageNative
+        languageLearning
+        theme
+      }
     }
-  )
+  }
+`
 
-  console.log('user', user, 'userConfig', userConfig)
+const SettingsPage = ({ userId }) => {
+  const {
+    data,
+    loading: queryLoading,
+    error: queryError,
+  } = useQuery(SETTINGS_USER_QUERY, {
+    variables: { id: userId },
+  })
+  const [updateUserConfig, { loading: updateLoading, error: updateError }] =
+    useMutation(UPDATE_USER_CONFIG_MUTATION, {
+      onCompleted: () => {
+        message.success('Updated!')
+      },
+      refetchQueries: ['SettingsUserQuery'],
+    })
+
+  const currentUser = useAuth().currentUser
+  const { user } = data || {}
 
   return (
     <>
       <MetaTags title="Settings" description="Settings page" />
       <Setting
-        settingImageSrc={AVATAR_URL[user.userConfig.defaultAvatarIndex]}
+        settingImageSrc={AVATAR_URL[user?.userConfig?.defaultAvatarIndex]}
         settingImageTitle="Avatar"
         cardTitle="Choose your avatar!"
       >
@@ -165,7 +190,7 @@ const AvatarSetting = ({ updateUserConfig, user }) => {
             onClick={() => {
               updateUserConfig({
                 variables: {
-                  id: user.userConfig.id,
+                  id: user?.userConfig?.id,
                   defaultAvatarIndex: index,
                 },
               })
@@ -175,7 +200,7 @@ const AvatarSetting = ({ updateUserConfig, user }) => {
               height: '48px',
               cursor: 'pointer',
               border:
-                user.userConfig.defaultAvatarIndex === index
+                user?.userConfig?.defaultAvatarIndex === index
                   ? `2px solid ${blue[5]}`
                   : 'none',
             }}

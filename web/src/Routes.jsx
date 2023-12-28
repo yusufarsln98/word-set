@@ -35,7 +35,7 @@ const Routes = () => {
         <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
       </Set>
       <PrivateSet unauthenticated="home" wrap={ApplicationLayout}>
-        <Route path="/latest" page={LatestPage} name="latest" />
+        <Route path="/" page={HomePage} name="home" />
         <PrivateSet unauthenticated="home" wrap={SetAndFolderLayout}>
           <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
           {/* <Route path="/set" page={SetPage} name="set" /> */}
@@ -55,7 +55,6 @@ const Routes = () => {
         <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
         <Route path="/admin/dictionaries/{dictionaryId:Int}/words" page={WordsPage} name="words" />
       </PrivateSet>
-      <Route path="/" page={HomePage} name="home" />
       <Route notfound page={NotFoundPage} />
     </Router>
   )

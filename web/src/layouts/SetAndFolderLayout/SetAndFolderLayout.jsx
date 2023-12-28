@@ -6,7 +6,7 @@ const SetAndFolderLayout = ({ children }) => {
       vertical
       style={{
         padding: '0 32px',
-        marginTop: 48,
+        margin: '48px 0',
         width: '1200px',
       }}
     >

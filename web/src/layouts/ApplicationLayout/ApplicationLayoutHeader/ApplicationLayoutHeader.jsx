@@ -76,7 +76,7 @@ const ApplicationLayoutHeader = () => {
       key: '1',
       label: (
         <>
-          <Link to={routes.latest()}>Home</Link>
+          <Link to={routes.home()}>Home</Link>
         </>
       ),
     },
@@ -224,9 +224,15 @@ const ApplicationLayoutHeader = () => {
     },
     {
       key: '4',
+      disabled: true,
       label: (
         <>
-          <Flex align="center" justify="start" gap={16}>
+          <Flex
+            align="center"
+            justify="start"
+            gap={16}
+            title="TODO: switch theme"
+          >
             <FireOutlined />
             <Paragraph
               style={{
@@ -351,13 +357,13 @@ const ApplicationLayoutHeader = () => {
             align="center"
           >
             <Link
-              to={routes.latest()} // later can be changed with routes.latest()
+              to={routes.home()} // later can be changed with routes.home()
             >
               <Image src="/logo/Logo-Text.svg" preview={false} width="120px" />
             </Link>
             <Menu
               mode="horizontal"
-              selectedKeys={pathname === '/latest' ? ['1'] : null}
+              selectedKeys={pathname === '/' ? ['1'] : null}
               items={headerMenuItems}
               style={{
                 background: colorBgContainer,

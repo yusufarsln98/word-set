@@ -1,5 +1,5 @@
 import { BlockOutlined } from '@ant-design/icons'
-import { Card, Flex, Select } from 'antd'
+import { Card, Empty, Flex, Select } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
@@ -31,7 +31,11 @@ const SetsPage = ({ userId }) => {
           </>
         ) : (
           <>
-            <VerticalList data={data?.user?.sets} />
+            {data.user.sets.length > 0 ? (
+              <VerticalList data={data?.user?.sets} />
+            ) : (
+              <Empty description={<p>You don&apos;t have any sets yet</p>} />
+            )}
           </>
         )}
       </Flex>
