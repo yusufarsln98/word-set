@@ -11,6 +11,7 @@ import {
   Avatar,
   Button,
   Card,
+  Dropdown,
   Empty,
   Flex,
   Modal,
@@ -25,6 +26,7 @@ import { MetaTags, useMutation, useQuery } from '@redwoodjs/web'
 import { useAuth } from 'src/auth'
 import {
   ADD_SET_TO_FOLDER_MUTATION,
+  DELETE_FOLDER_MUTATION,
   FOLDER_QUERY,
   REMOVE_SET_FROM_FOLDER_MUTATION,
   USER_QUERY_SETS_UNDETAILED,
@@ -32,7 +34,6 @@ import {
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
 
 import styles from '../../Global.module.scss'
-import CardListOfUser from '../LatestPage/CardListOfUser/CardListOfUser'
 
 const FolderPage = ({ folderId }) => {
   const { currentUser } = useAuth()
@@ -54,7 +55,22 @@ const FolderPage = ({ folderId }) => {
         setShowAddSetModal={setShowAddSetModal}
       />
       {folder?.sets.length > 0 ? (
-        <CardListOfUser data={folder?.sets} quantity={['n-flashcards']} /> // burasi degisecek
+        <Flex
+          gap={24}
+          style={{
+            marginTop: 24,
+          }}
+          wrap="wrap"
+        >
+          {folder?.sets.map((set) => (
+            <SetCard
+              key={set.id}
+              set={set}
+              user={folder.user}
+              folderId={folder.id}
+            />
+          ))}
+        </Flex>
       ) : (
         <Flex
           align="center"
@@ -111,6 +127,14 @@ const BorderedButton = ({ children, ...rest }) => (
 )
 
 const FolderPageHeader = ({ folder, setShowAddSetModal }) => {
+  // delete folder mutation
+  const [deleteFolder] = useMutation(DELETE_FOLDER_MUTATION, {
+    onCompleted: () => {
+      message.success('Folder deleted!')
+      navigate(routes.folders({ userId: folder?.user.id }))
+    },
+  })
+
   return (
     <Flex vertical gap={24}>
       <Flex style={{ color: gray[6] }} align="center" justify="start" gap={48}>
@@ -157,45 +181,73 @@ const FolderPageHeader = ({ folder, setShowAddSetModal }) => {
               }}
               disabled
             />
-            <BorderedButton
-              size="large"
-              shape="circle"
-              title="More"
-              icon={
-                <MoreOutlined
-                  style={{
-                    rotate: '90deg',
-                  }}
-                />
-              }
-              onClick={() => {
-                message.info('Coming soon!')
+            <Dropdown
+              arrow
+              placement="bottomRight"
+              trigger={['click']}
+              menu={{
+                items: [
+                  {
+                    danger: true,
+                    label: (
+                      <>
+                        <Flex
+                          onClick={() => {
+                            deleteFolder({
+                              variables: {
+                                id: folder?.id,
+                              },
+                            })
+                          }}
+                        >
+                          Delete Folder
+                        </Flex>
+                      </>
+                    ),
+                  },
+                ],
               }}
-            />
+            >
+              <BorderedButton
+                size="large"
+                shape="circle"
+                title="More"
+                icon={
+                  <MoreOutlined
+                    style={{
+                      rotate: '90deg',
+                    }}
+                  />
+                }
+              />
+            </Dropdown>
           </Space>
         </Flex>
       </Flex>
-      <Flex align="center" justify="start" gap={16}>
-        <FolderOutlined
-          style={{
-            fontSize: '48px',
-            color: gray[5],
-          }}
-        />
-        <Flex vertical gap={4}>
-          <h2>{folder?.title}</h2>
-          <p
+      <Flex vertical>
+        <Flex align="center" justify="start" gap={16}>
+          <FolderOutlined
             style={{
-              color: gray[6],
+              fontSize: '48px',
+              color: gray[5],
             }}
-          >
-            {folder?.description}
-          </p>
+          />
+          <Flex vertical gap={4}>
+            <h2>{folder?.title}</h2>
+          </Flex>
         </Flex>
+        <p
+          style={{
+            color: gray[6],
+          }}
+        >
+          {folder?.description}
+        </p>
       </Flex>
     </Flex>
   )
 }
+
 const AddSetModal = ({ folder, showAddSetModal, setShowAddSetModal }) => {
   // query
   const { currentUser } = useAuth()
@@ -328,5 +380,86 @@ const AddSetModal = ({ folder, showAddSetModal, setShowAddSetModal }) => {
         </Flex>
       </Flex>
     </Modal>
+  )
+}
+
+const SetCard = ({ set, user, folderId }) => {
+  const [removeSetFromFolder] = useMutation(REMOVE_SET_FROM_FOLDER_MUTATION, {
+    onCompleted: () => {
+      message.success('Set removed from folder!')
+    },
+    refetchQueries: [
+      {
+        query: FOLDER_QUERY,
+        variables: { id: folderId },
+      },
+    ],
+  })
+
+  return (
+    <Card
+      className={styles.hoverable}
+      style={{ width: '48%', borderRadius: '0', cursor: 'pointer' }}
+      onClick={() => {
+        navigate(routes.set({ setId: set.id }))
+      }}
+    >
+      <Flex
+        vertical
+        style={{ width: '100%', height: '120px' }}
+        justify="space-between"
+      >
+        <h3>{set.title}</h3>
+        <Flex style={{ bottom: 0 }} align="center" justify="space-between">
+          <Flex align="center" gap={8}>
+            <Avatar src={AVATAR_URL[user.userConfig.defaultAvatarIndex]} />
+            <p style={{ color: gray[6], fontWeight: 'bold' }}>
+              {user.username}
+            </p>
+          </Flex>
+          <Dropdown
+            arrow
+            placement="bottomRight"
+            trigger={['click']}
+            menu={{
+              items: [
+                {
+                  danger: true,
+                  label: (
+                    <>
+                      <Flex
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          removeSetFromFolder({
+                            variables: {
+                              id: folderId,
+                              input: {
+                                setId: set.id,
+                              },
+                            },
+                          })
+                        }}
+                      >
+                        Remove from folder
+                      </Flex>
+                    </>
+                  ),
+                },
+              ],
+            }}
+          >
+            <Button
+              type="text"
+              // prevent default dropdown menu
+              onClick={(e) => {
+                e.stopPropagation()
+              }}
+            >
+              <MoreOutlined />
+            </Button>
+          </Dropdown>
+        </Flex>
+      </Flex>
+    </Card>
   )
 }
