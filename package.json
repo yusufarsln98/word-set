@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "6.6.0",
+    "@redwoodjs/cli-data-migrate": "6.6.0",
     "@redwoodjs/cli-storybook": "6.6.0",
     "@redwoodjs/core": "6.6.0"
   },
