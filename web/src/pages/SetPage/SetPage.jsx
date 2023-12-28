@@ -27,7 +27,6 @@ const SetPage = ({ setId }) => {
   })
 
   const set = data?.set
-  console.log('set', set)
   const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0)
 
   return (
@@ -147,7 +146,6 @@ const SetPageHeader = ({ set }) => {
 }
 
 const Flashcard = ({ flashcard, termsLanguage, translationsLanguage }) => {
-  console.log('flashcard', flashcard.word.meanings[0])
   const [isFlipped, setIsFlipped] = useState(false)
   return (
     <>

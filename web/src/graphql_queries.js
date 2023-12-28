@@ -426,28 +426,3 @@ export const DELETE_SET_MUTATION = gql`
     }
   }
 `
-
-export const CREATE_FLASHCARD_MUTATION = gql`
-  mutation CreateFlashCardMutation(
-    $wordId: Int!
-    $meaningIndex: Int!
-    $setId: Int!
-  ) {
-    createFlashCard(
-      input: { wordId: $wordId, meaningIndex: $meaningIndex, setId: $setId }
-    ) {
-      id
-      word {
-        term
-        meanings {
-          definition
-          cefrLevel
-          partOfSpeech
-          example
-          translation
-        }
-      }
-      meaningIndex
-    }
-  }
-`
