@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { HappyProvider } from '@ant-design/happy-work-theme'
 import { BookOutlined } from '@ant-design/icons'
-import { Language } from '@prisma/client'
+// import { Language } from '@prisma/client'
 import { Button, Flex, Input, Table, message } from 'antd'
 
 import { Link, navigate, routes } from '@redwoodjs/router'
@@ -14,6 +14,17 @@ import {
 } from 'src/graphql_queries'
 
 import styles from '../../Global.module.scss'
+
+const Language = {
+  English: 'English',
+  French: 'French',
+  Turkish: 'Turkish',
+  Spanish: 'Spanish',
+  German: 'German',
+  Italian: 'Italian',
+  Portuguese: 'Portuguese',
+  Japanese: 'Japanese',
+}
 
 const DictionariesPage = () => {
   // there are 8 languages and 56 combinations of languages

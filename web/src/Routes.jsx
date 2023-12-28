@@ -38,10 +38,8 @@ const Routes = () => {
         <Route path="/" page={HomePage} name="home" />
         <PrivateSet unauthenticated="login" wrap={SetAndFolderLayout}>
           <Route path="/folder/{folderId:Int}" page={FolderPage} name="folder" />
-          {/* <Route path="/set" page={SetPage} name="set" /> */}
           <Route path="/set/{setId:Int}" page={SetPage} name="set" />
-          <Route path="/set/create" page={SetCreatePage} name="createSet" />
-          {/* <Route path="/create-set" page={CreateSetPage} name="createSet" /> */}
+          <Route path="/set/create" page={CreateSetPage} name="createSet" />
         </PrivateSet>
         <PrivateSet unauthenticated="login" wrap={ProfileLayout}>
           <Route path="/user/{userId:Int}/recent-activities" page={ProfilePage} name="profile" />

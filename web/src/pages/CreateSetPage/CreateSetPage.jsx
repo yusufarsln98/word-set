@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { gray } from '@ant-design/colors'
 import { UserOutlined, PlusOutlined } from '@ant-design/icons'
-import { Language } from '@prisma/client'
+// import { Language } from '@prisma/client'
 import {
   AutoComplete,
   Button,
@@ -21,6 +21,17 @@ import { useAuth } from 'src/auth'
 import { CREATE_SET_MUTATION } from 'src/graphql_queries'
 
 import styles from '../../Global.module.scss'
+
+const Language = {
+  English: 'English',
+  French: 'French',
+  Turkish: 'Turkish',
+  Spanish: 'Spanish',
+  German: 'German',
+  Italian: 'Italian',
+  Portuguese: 'Portuguese',
+  Japanese: 'Japanese',
+}
 
 const renderTitle = (title) => <span>{title}</span>
 const renderItem = (title, count) => ({
