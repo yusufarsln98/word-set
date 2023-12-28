@@ -11,28 +11,12 @@ export const set = ({ id }) => {
 }
 
 export const createSet = async ({ input }) => {
-  // console.log('input', input.flashCards)
-  const flashCards = input.flashCards // get cards ids
+  // get current user from context
+  // const user = context.currentUser
 
-  // get flashCards from DB
-  const flashCardsFromDB = await db.flashCard.findMany({
-    where: { id: { in: flashCards } },
+  return db.set.create({
+    data: input,
   })
-
-  // remove flashCards from input
-  delete input.flashCards
-
-  // create set and connect flashcards to set
-  const set = await db.set.create({
-    data: {
-      ...input,
-      flashCards: {
-        connect: flashCardsFromDB.map((card) => ({ id: card.id })),
-      },
-    },
-  })
-
-  return set
 }
 
 export const updateSet = ({ id, input }) => {
@@ -42,7 +26,19 @@ export const updateSet = ({ id, input }) => {
   })
 }
 
-export const deleteSet = ({ id }) => {
+export const deleteSet = async ({ id }) => {
+  // get current user from context, check if the set is belongs to the user
+  const user = context.currentUser
+
+  // if set not belongs to user, return error
+  const set = await db.set.findUnique({ where: { id } })
+  if (set.userId !== user.id) {
+    throw new Error('Set not belongs to user')
+  }
+
+  // remove all flashcards belongs to the set
+  await db.flashCard.deleteMany({ where: { setId: id } })
+
   return db.set.delete({
     where: { id },
   })

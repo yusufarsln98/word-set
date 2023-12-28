@@ -23,10 +23,15 @@ export const schema = gql`
     PREMIUM_USER
     USER
   }
-
+  # Input for gettin user sets without a given word id that not in the set
+  input UserSetsWithoutWordInput {
+    userId: Int!
+    wordId: Int!
+  }
   type Query {
     users: [User!]! @requireAuth
     user(id: Int!): User @requireAuth
+    userSetsWithoutWord(input: UserSetsWithoutWordInput!): [Set]! @requireAuth
   }
 
   input CreateUserInput {

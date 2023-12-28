@@ -20771,6 +20771,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-card-flip@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "react-card-flip@npm:1.2.2"
+  peerDependencies:
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 571ce5f565f4c7474cca826cba6117c7d2349c6a5b6ca5482bb7267c930c28479022d4dc9556f744c4aa2593394f8364d2a54b51fc10855256f4605e6467d751
+  languageName: node
+  linkType: hard
+
 "react-colorful@npm:^5.1.2":
   version: 5.6.1
   resolution: "react-colorful@npm:5.6.1"
@@ -24513,6 +24523,7 @@ __metadata:
     antd: ^5.11.3
     prop-types: 15.8.1
     react: 18.2.0
+    react-card-flip: ^1.2.2
     react-dom: 18.2.0
     sass: ^1.69.5
     scss: ^0.2.4
