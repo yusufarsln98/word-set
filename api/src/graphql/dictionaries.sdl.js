@@ -19,9 +19,9 @@ export const schema = gql`
   }
 
   type Query {
-    dictionaries: [Dictionary!]! @requireAuth
-    dictionary(id: Int!): Dictionary @requireAuth
-    dictionaryByName(name: String!): Dictionary @requireAuth
+    dictionaries: [Dictionary!]! @skipAuth
+    dictionary(id: Int!): Dictionary @skipAuth
+    dictionaryByName(name: String!): Dictionary @skipAuth
   }
 
   input CreateDictionaryInput {
@@ -37,9 +37,9 @@ export const schema = gql`
   }
 
   type Mutation {
-    createDictionary(input: CreateDictionaryInput!): Dictionary! @requireAuth
+    createDictionary(input: CreateDictionaryInput!): Dictionary! @skipAuth
     updateDictionary(id: Int!, input: UpdateDictionaryInput!): Dictionary!
-      @requireAuth
-    deleteDictionary(id: Int!): Dictionary! @requireAuth
+      @skipAuth
+    deleteDictionary(id: Int!): Dictionary! @skipAuth
   }
 `
