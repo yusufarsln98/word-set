@@ -52,10 +52,10 @@ const Routes = () => {
       <PrivateSet unauthenticated="login" roles="ADMIN" wrap={AdminLayout}>
         <Route path="/admin" page={AdminPage} name="admin" />
         {/* Uygulamayi sifirdan calistirirken, sozlukler sayfasini acik yapmaliyiz. */}
+        <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
         <Route path="/admin/dictionaries/{dictionaryId:Int}/words" page={WordsPage} name="words" />
       </PrivateSet>
       <Route notfound page={NotFoundPage} />
-      <Route path="/admin/dictionaries" page={DictionariesPage} name="dictionaries" />
     </Router>
   )
 }
