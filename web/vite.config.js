@@ -10,6 +10,12 @@ import redwood from '@redwoodjs/vite'
 
 const viteConfig = {
   plugins: [redwood()],
+  resolve: {
+    alias: {
+      '.prisma/client/index-browser':
+        './node_modules/.prisma/client/index-browser.js',
+    },
+  },
 }
 
 export default defineConfig(viteConfig)
