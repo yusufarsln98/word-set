@@ -1,11 +1,34 @@
+import { useEffect } from 'react'
+
 import { gray } from '@ant-design/colors'
 import { Avatar, Flex, Tabs, theme } from 'antd'
 
 import { Link, routes, navigate, useLocation } from '@redwoodjs/router'
+import { useQuery } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
 
 import { AVATAR_URL } from '../ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
+
+export const PROFILE_USER_QUERY = gql`
+  query ProfileUserQuery($id: Int!) {
+    user(id: $id) {
+      id
+      name
+      username
+      email
+      createdAt
+      userConfig {
+        id
+        defaultAvatarIndex
+        birthday
+        languageNative
+        languageLearning
+        theme
+      }
+    }
+  }
+`
 
 const onChange = (key) => {
   switch (key) {
@@ -24,8 +47,17 @@ const onChange = (key) => {
 }
 
 const ProfileLayout = ({ children }) => {
+  // get user id from url
+  const userId = parseInt(useLocation().pathname.split('/')[2])
   const { currentUser } = useAuth()
-  const { userConfig } = currentUser
+
+  const { data, loading, error } = useQuery(PROFILE_USER_QUERY, {
+    variables: { id: userId },
+  })
+
+  const { user: user } = data || {}
+  const { userConfig } = user || {}
+
   const {
     token: { colorBorder },
   } = theme.useToken()
@@ -35,7 +67,7 @@ const ProfileLayout = ({ children }) => {
       key: 'recent-activities',
       label: (
         <>
-          <Link to={routes.profile({ userId: currentUser.id })}>
+          <Link to={routes.profile({ userId: user?.id ?? 0 })}>
             Recent Activities
           </Link>
         </>
@@ -45,7 +77,7 @@ const ProfileLayout = ({ children }) => {
       key: 'folders',
       label: (
         <>
-          <Link to={routes.folders({ userId: currentUser.id })}>Folders</Link>
+          <Link to={routes.folders({ userId: user?.id ?? 0 })}>Folders</Link>
         </>
       ),
     },
@@ -53,7 +85,7 @@ const ProfileLayout = ({ children }) => {
       key: 'sets',
       label: (
         <>
-          <Link to={routes.sets({ userId: currentUser.id })}>Sets</Link>
+          <Link to={routes.sets({ userId: user?.id ?? 0 })}>Sets</Link>
         </>
       ),
     },
@@ -61,21 +93,24 @@ const ProfileLayout = ({ children }) => {
       key: 'settings',
       label: (
         <>
-          <Link to={routes.settings({ userId: currentUser.id })}>Settings</Link>
+          <Link to={routes.settings({ userId: user?.id ?? 0 })}>Settings</Link>
         </>
       ),
     },
   ]
   const currentTab = useLocation().pathname.split('/')[3] || 'recent-activities'
 
+  useEffect(() => {
+    if (user && currentUser && user.id !== currentUser.id) {
+      navigate(routes.home())
+    }
+  }, [user, currentUser])
+
   return (
     <>
       <Flex
         vertical
         style={{
-          // padding: '16px',
-          // paddingTop: '32px',
-          // paddingBottom: '32px',
           padding: '32px 16px',
           width: '1200px',
         }}
@@ -92,8 +127,8 @@ const ProfileLayout = ({ children }) => {
             draggable={false}
           />
           <Flex vertical gap={4}>
-            <h2 style={{ color: gray[7] }}>{currentUser?.username}</h2>
-            <p style={{ color: gray[2] }}>{currentUser?.name}</p>
+            <h2 style={{ color: gray[7] }}>{user?.username}</h2>
+            <p style={{ color: gray[2] }}>{user?.name}</p>
           </Flex>
         </Flex>
 

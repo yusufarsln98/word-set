@@ -10,9 +10,21 @@ export const flashCard = ({ id }) => {
   })
 }
 
-export const createFlashCard = ({ input }) => {
+export const createFlashCard = async ({ input }) => {
+  // if word is already in set, return error
+  const flashcard = await db.flashCard.findFirst({
+    where: { wordId: input.wordId, setId: input.setId },
+  })
+
+  if (flashcard) {
+    throw new Error('Word already in set')
+  }
+
   return db.flashCard.create({
-    data: input,
+    data: {
+      ...input,
+      boost: 1,
+    },
   })
 }
 

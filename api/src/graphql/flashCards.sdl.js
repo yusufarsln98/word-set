@@ -17,7 +17,7 @@ export const schema = gql`
   input CreateFlashCardInput {
     wordId: Int!
     meaningIndex: Int!
-    boost: Float!
+    # boost: Float!
     setId: Int!
   }
 

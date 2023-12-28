@@ -1,6 +1,6 @@
 import { gray } from '@ant-design/colors'
 import { FolderOutlined } from '@ant-design/icons'
-import { Card, Divider, Flex, Select, Skeleton, Tag } from 'antd'
+import { Card, Divider, Empty, Flex, Select, Skeleton, Tag } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
 import { MetaTags, useQuery } from '@redwoodjs/web'
@@ -14,6 +14,7 @@ const FoldersPage = ({ userId }) => {
   const { data, loading, error } = useQuery(USER_QUERY_FOLDERS, {
     variables: { userId },
   })
+  const { folders } = data?.user || []
 
   return (
     <>
@@ -33,7 +34,13 @@ const FoldersPage = ({ userId }) => {
           </>
         ) : (
           <>
-            <VerticalList data={data?.user?.folders} />
+            {folders?.length > 0 ? (
+              <>
+                <VerticalList data={folders} />
+              </>
+            ) : (
+              <Empty description={<p>You don&apos;t have any folders yet</p>} />
+            )}
           </>
         )}
       </Flex>
@@ -57,19 +64,19 @@ export const VerticalList = ({ data }) => {
           new Date(instance.createdAt)
         )
         return (
-          <>
+          <div key={instance.id}>
             {shouldPrintDate && (
               <Divider orientation="left">{formattedDate}</Divider>
             )}
-            <HorizontalCard key={instance.id} instance={instance} />
-          </>
+            <TheCard key={instance.id} instance={instance} />
+          </div>
         )
       })}
     </Flex>
   )
 }
 
-const HorizontalCard = ({ instance }) => {
+const TheCard = ({ instance }) => {
   return (
     <>
       <Link

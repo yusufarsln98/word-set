@@ -1,14 +1,43 @@
 import { gray } from '@ant-design/colors'
-import { RightOutlined, LeftOutlined } from '@ant-design/icons'
-import { Button, Card, Empty, Flex, Image, Skeleton, Space, Tag } from 'antd'
+import { Card, Empty, Flex, Image, Skeleton, Space, Tag } from 'antd'
 
 import { Link, routes } from '@redwoodjs/router'
 
-import { useAuth } from 'src/auth'
 import styles from 'src/Global.module.scss'
 import { AVATAR_URL } from 'src/layouts/ApplicationLayout/ApplicationLayoutHeader/ApplicationLayoutHeader'
 
-const CardListOfUser = ({ data, quantity }) => {
+const CardListOfUser = ({ data, user }) => {
+  // drag and slide the filters
+  const [dragging, setDragging] = React.useState(false)
+  const [startX, setStartX] = React.useState(0)
+  const [scrollLeft, setScrollLeft] = React.useState(0)
+  const [disabled, setDisabled] = React.useState(false)
+  const onMouseDown = (event) => {
+    setDragging(true)
+    setDisabled(true)
+    setStartX(event.pageX - event.currentTarget.offsetLeft)
+    setScrollLeft(event.currentTarget.scrollLeft)
+  }
+
+  const onMouseUp = (event) => {
+    setDragging(false)
+    // if offset is 0, then disable is true
+    const offset = event.currentTarget.scrollLeft - scrollLeft
+    if (offset === 0) {
+      setDisabled(false)
+    } else {
+      setDisabled(true)
+    }
+  }
+
+  const onMouseMove = (event) => {
+    if (!dragging) return
+    event.preventDefault()
+    const x = event.pageX - event.currentTarget.offsetLeft
+    const walk = x - startX //scroll-fast
+    event.currentTarget.scrollLeft = scrollLeft - walk
+  }
+
   return (
     <>
       {data.length === 0 ? (
@@ -27,81 +56,48 @@ const CardListOfUser = ({ data, quantity }) => {
           style={{
             paddingBottom: 24,
             overflowX: 'scroll',
+            // disable text selection
+            userSelect: 'none',
           }}
           className={styles.hideScroll}
           id="cardListOfUser"
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseLeave={onMouseUp}
+          onMouseMove={onMouseMove}
         >
-          <Button
-            style={{
-              position: 'absolute',
-              left: 20,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 120,
-              width: 24,
-            }}
-            type="text"
-            icon={<LeftOutlined />}
-            size="large"
-            onClick={() => {
-              const element = document.getElementById('cardListOfUser')
-              element.scrollTo({
-                left: element.scrollLeft - 400,
-                behavior: 'smooth',
-              })
-            }}
-          />
           {data &&
             data.map((instance) => (
               <TheCard
                 key={instance.id}
+                disabled={disabled}
                 instance={instance}
-                quantity={quantity}
-              />
+                user={user}
+              >
+                {instance.__typename === 'Set' && (
+                  <Tag color="geekblue">{instance.flashCards.length} cards</Tag>
+                )}
+                {instance.__typename === 'Folder' && (
+                  <Tag color="geekblue">{instance.sets.length} sets</Tag>
+                )}
+              </TheCard>
             ))}
-          <Button
-            style={{
-              position: 'absolute',
-              right: 20,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: 120,
-              width: 24,
-            }}
-            type="text"
-            icon={<RightOutlined />}
-            size="large"
-            onClick={() => {
-              const element = document.getElementById('cardListOfUser')
-              element.scrollTo({
-                left: element.scrollLeft + 400,
-                behavior: 'smooth',
-              })
-            }}
-          />
         </Flex>
       )}
     </>
   )
 }
 
-const TheCard = ({ instance, quantity }) => {
-  const { user } = instance
-  // const { userConfig } = user get user config from auth
-  const { userConfig } = useAuth().currentUser
-
+const TheCard = ({ disabled, instance, user, children }) => {
   return (
     <>
       <Link
-        // if instance type in is Set, then link to set page
-        // if instance type is Folder, then link to folder page
-
         to={
-          instance.__typename === 'Set'
-            ? routes.set({ setId: instance.id })
-            : routes.folder({ folderId: instance.id })
+          !disabled
+            ? instance.__typename === 'Set'
+              ? routes.set({ setId: instance.id })
+              : routes.folder({ folderId: instance.id })
+            : null
         }
       >
         <Card className={styles.hoverable}>
@@ -136,7 +132,7 @@ const TheCard = ({ instance, quantity }) => {
             >
               <Space>
                 <Image
-                  src={AVATAR_URL[userConfig?.defaultAvatarIndex]} // TODO: remove
+                  src={AVATAR_URL[user?.userConfig?.defaultAvatarIndex]} // TODO: remove
                   width={24}
                   height={24}
                   alt="avatar"
@@ -151,9 +147,7 @@ const TheCard = ({ instance, quantity }) => {
                   {user?.username}
                 </p>
               </Space>
-              <Tag color="geekblue">
-                {quantity[0]} {quantity[1]}
-              </Tag>
+              {children}
             </Flex>
           </Flex>
         </Card>

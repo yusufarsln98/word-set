@@ -14,6 +14,7 @@ import {
   Flex,
   Form,
   Input,
+  Modal,
   Select,
   Space,
   Tag,
@@ -28,8 +29,9 @@ import Title from 'antd/es/typography/Title'
 import { useQuery, useMutation } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
+import AddFlashcardToSetModal from 'src/components/AddFlashcardToSetModal/AddFlashcardToSetModal'
 import { CREATE_WORD_MUTATION, QUERY_WORD_BY_SEARCH } from 'src/graphql_queries'
-import { capitalizeAll, capitalizeFirstLetter } from 'src/utility'
+import { capitalizeAll } from 'src/utility'
 
 const modes = [
   {
@@ -67,6 +69,7 @@ const Dictionary = function ({ languageNative, languageLearning }) {
   const { currentUser } = useAuth()
 
   const [wordObject, setWordObject] = useState({
+    wordId: -1,
     word: 'wordset',
     definition:
       'A super cool dictionary, flashcard and a new fashion language learning tool.',
@@ -81,12 +84,22 @@ const Dictionary = function ({ languageNative, languageLearning }) {
   const [mode, setMode] = useState(modes[0].value)
   const searchButtonRef = useRef(null) // Trigger search with 'Enter' key
   const [gptSearchLoading, setGptSearchLoading] = useState(false)
+  const [addWordModalVisible, setAddWordModalVisible] = useState(false)
   const [createWord] = useMutation(CREATE_WORD_MUTATION, {
     onCompleted: (data) => {
-      console.log('data', data)
+      const wordObject = {
+        wordId: data.createWord.id,
+        word: data.createWord.term,
+        definition: data.createWord.meanings[0].definition,
+        cefrLevel: data.createWord.meanings[0].cefrLevel,
+        partOfSpeech: data.createWord.meanings[0].partOfSpeech,
+        example: data.createWord.meanings[0].example,
+        translation: data.createWord.meanings[0].translation,
+      }
+      setWordObject(wordObject)
     },
     onError: (error) => {
-      console.error('error', error)
+      message.error(error.message)
     },
   })
   const {
@@ -119,6 +132,7 @@ const Dictionary = function ({ languageNative, languageLearning }) {
     if (queryText && queryText.length > 0 && queryText !== wordObject?.word) {
       if (queryData && queryData.wordBySearch) {
         const wordObject = {
+          wordId: queryData.wordBySearch.id,
           word: queryData.wordBySearch.term,
           definition: queryData.wordBySearch.meanings[0].definition,
           cefrLevel: queryData.wordBySearch.meanings[0].cefrLevel,
@@ -142,10 +156,9 @@ const Dictionary = function ({ languageNative, languageLearning }) {
         setWordObject(searchResult)
         return
       }
-      setWordObject({
-        ...searchResult,
-        partOfSpeech: searchResult.partOfSpeech,
-      })
+      // setWordObject({
+      //   ...searchResult,
+      // })
       createWord({
         variables: {
           term: searchResult.word,
@@ -259,7 +272,7 @@ const Dictionary = function ({ languageNative, languageLearning }) {
                     key="reload"
                     type="text"
                     size="large"
-                    title="Pronounce"
+                    title="TODO: For now Just a Quack!"
                     onClick={() => {
                       new Audio('/quack.mp3').play()
                     }}
@@ -324,9 +337,17 @@ const Dictionary = function ({ languageNative, languageLearning }) {
                     wordObject?.word === 'wordset'
                   }
                   title="Add to a sets"
+                  onClick={() => {
+                    setAddWordModalVisible(true)
+                  }}
                   icon={<PlusCircleFilled />}
                 />
               </Flex>
+              <AddFlashcardToSetModal
+                addWordModalVisible={addWordModalVisible}
+                setAddWordModalVisible={setAddWordModalVisible}
+                word={wordObject}
+              />
             </>
           )}
         </Flex>

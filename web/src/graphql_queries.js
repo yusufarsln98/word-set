@@ -85,6 +85,14 @@ export const USER_QUERY_SETS = gql`
         flashCards {
           id
         }
+        userId
+        user {
+          username
+          userConfig {
+            id
+            defaultAvatarIndex
+          }
+        }
       }
     }
   }
@@ -133,6 +141,7 @@ export const USER_QUERY_UNDETAILED = gql`
     }
   }
 `
+
 export const USER_QUERY_ACTIVITY = gql`
   query UserActivity($userId: Int!) {
     user(id: $userId) {
@@ -369,6 +378,76 @@ export const QUERY_WORD_BY_SEARCH = gql`
         partOfSpeech
         translation
       }
+    }
+  }
+`
+
+export const DELETE_FOLDER_MUTATION = gql`
+  mutation DeleteFolderMutation($id: Int!) {
+    deleteFolder(id: $id) {
+      id
+    }
+  }
+`
+
+export const SET_QUERY = gql`
+  query SetQuery($id: Int!) {
+    set(id: $id) {
+      id
+      title
+      description
+      createdAt
+      termsLanguage
+      translationsLanguage
+      flashCards {
+        id
+        boost
+        word {
+          id
+          term
+          meanings {
+            definition
+            cefrLevel
+            partOfSpeech
+            example
+            translation
+          }
+        }
+        meaningIndex
+      }
+    }
+  }
+`
+
+export const DELETE_SET_MUTATION = gql`
+  mutation DeleteSetMutation($id: Int!) {
+    deleteSet(id: $id) {
+      id
+    }
+  }
+`
+
+export const CREATE_FLASHCARD_MUTATION = gql`
+  mutation CreateFlashCardMutation(
+    $wordId: Int!
+    $meaningIndex: Int!
+    $setId: Int!
+  ) {
+    createFlashCard(
+      input: { wordId: $wordId, meaningIndex: $meaningIndex, setId: $setId }
+    ) {
+      id
+      word {
+        term
+        meanings {
+          definition
+          cefrLevel
+          partOfSpeech
+          example
+          translation
+        }
+      }
+      meaningIndex
     }
   }
 `

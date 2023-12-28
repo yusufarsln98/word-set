@@ -49,7 +49,8 @@ export const removeSetFromFolder = ({ id, input }) => {
   })
 }
 
-export const deleteFolder = ({ id }) => {
+export const deleteFolder = async ({ id }) => {
+  // function below disconnects set and remove the folder
   return db.folder.delete({
     where: { id },
   })
