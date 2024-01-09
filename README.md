@@ -7,6 +7,14 @@ Welcome to [RedwoodJS](https://redwoodjs.com)!
 > - Redwood requires [Node.js](https://nodejs.org/en/) (=18.x) and [Yarn](https://yarnpkg.com/) (>=1.15)
 > - Are you on Windows? For best results, follow our [Windows development setup](https://redwoodjs.com/docs/how-to/windows-development-setup) guide
 
+Cloning the Project:
+
+```
+git clone https://github.com/yusufarsln98/word-set.git
+```
+
+or just download the folder and go to the root folder.
+
 Start by installing dependencies:
 
 ```
