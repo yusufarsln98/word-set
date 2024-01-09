@@ -1,0 +1,5 @@
+# Change the file name to .env after making the necessary settings.
+
+DATABASE_URL="postgresql://postgres:1234@localhost:5432/word_set" # Your real postgresql database URL
+SESSION_SECRET="larktUSWOT5dnFN8+o3xkBXhbnTFp3AtJPOrFTVdnhx="
+REDWOOD_ENV_OPENAI_API_KEY="ADD YOUR OPENAI API KEY HERE!"
