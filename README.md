@@ -122,8 +122,6 @@ The best way to learn Redwood is by going through the comprehensive [tutorial](h
 - [Learn how to contribute](https://redwoodjs.com/docs/contributing)
 
 
-# -------------------- STAY TUNED --------------------
-
 # WordSet - Language Learning Application
 
 ![WordSet](https://raw.githubusercontent.com/yusufarsln98/word-set/master/_assets/Logo.png)
@@ -171,15 +169,30 @@ Within the application, there is a calendar that displays the days when the user
 
 
 ## GPT Prompt To Receive Flashcard Object
-```
-Note: When answering, do not make any explanation. Just write the object that is asked for.
+```js
+const getSystemMessage = (mode, [languageLearning, languageNative]) => {
+  return `
+  You function as a ${languageLearning} dictionary, provided a ${mode} and returning either a 'definition object' or an 'error object'.
+  Your task is to determine whether the provided ${mode} is belong to the ${languageLearning} or not.
 
-Act as an advanced dictionary. Fill in the '?' areas in the object. If not such a write 'null' without quotes.
-{
-    "word": "abate",
-    "definitionInEnglish": ?,
-    "exampleInEnglish": ?,
-    "turkishTranslation": ?
+  If you determine the provided ${mode} belong to the ${languageLearning}, return the 'definition object', otherwise, return the 'error object'.
+  Both objects are described below.
+
+  definition object
+  {
+    "${mode}": ?, [${capitalizeAll(mode)} IN ${languageLearning}]
+    "definition": ?, [DEFINITION IN ${languageLearning}]
+    "cefrLevel": ?,
+    "partOfSpeech": ?,
+    "example": ?, [EXAMPLE IN ${languageLearning}]
+    "translation": ? [TRANSLATION IN ${languageNative} IN ONE OR A FEW WORDS]
+  }
+
+  error object
+  {
+    "${mode}": ?, ${mode} that you are searching for
+    "error": "No definition found."
+  }`
 }
 ```
 
